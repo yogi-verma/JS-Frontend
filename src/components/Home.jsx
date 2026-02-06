@@ -1,6 +1,6 @@
 const Home = () => {
     const googleLogin = () => {
-        window.open('http://localhost:5000/auth/google', "_self");
+        window.open('https://js-backend-olive.vercel.app/auth/google', "_self");
     };
 
     return (

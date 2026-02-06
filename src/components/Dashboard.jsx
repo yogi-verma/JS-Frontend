@@ -6,7 +6,7 @@ const Dashboard = () => {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/current_user', {
+        fetch('https://js-backend-olive.vercel.app/api/current_user', {
             credentials: 'include'
         })
             .then(res => {
@@ -22,7 +22,7 @@ const Dashboard = () => {
     }, []);
 
     const logout = () => {
-        window.open('http://localhost:5000/auth/logout', "_self");
+        window.open('https://js-backend-olive.vercel.app/auth/logout', "_self");
     };
 
     const toggleDropdown = () => {
