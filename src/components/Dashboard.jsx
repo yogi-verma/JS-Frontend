@@ -10,14 +10,20 @@ const Dashboard = () => {
             credentials: 'include'
         })
             .then(res => {
-                if (res.status === 401) {
-                    window.location.href = '/';
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        window.location.href = '/';
+                    }
                     return null;
                 }
                 return res.json();
             })
             .then(data => {
                 if (data) setUser(data);
+            })
+            .catch(err => {
+                console.error('Error fetching user:', err);
+                window.location.href = '/';
             });
     }, []);
 
