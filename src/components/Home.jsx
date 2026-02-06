@@ -1,4 +1,27 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Home = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if user is already logged in
+        fetch('https://js-backend-olive.vercel.app/api/current_user', {
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.email) {
+                    // User is logged in, redirect to dashboard
+                    navigate('/dashboard');
+                }
+            })
+            .catch(err => {
+                // User not logged in, stay on home page
+                console.log('Not authenticated', err);
+            });
+    }, [navigate]);
+
     const googleLogin = () => {
         window.open('https://js-backend-olive.vercel.app/auth/google', "_self");
     };
