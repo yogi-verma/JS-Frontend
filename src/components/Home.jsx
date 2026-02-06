@@ -6,20 +6,29 @@ const Home = () => {
 
     useEffect(() => {
         // Check if user is already logged in
-        fetch('https://js-backend-olive.vercel.app/api/current_user', {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.email) {
-                    // User is logged in, redirect to dashboard
-                    navigate('/dashboard');
+        const checkAuth = async () => {
+            try {
+                const res = await fetch('https://js-backend-olive.vercel.app/api/current_user', {
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.email) {
+                        // User is logged in, redirect to dashboard
+                        navigate('/dashboard');
+                    }
+                } else {
+                    console.log('User not authenticated, status:', res.status);
                 }
-            })
-            .catch(err => {
-                // User not logged in, stay on home page
-                console.log('Not authenticated', err);
-            });
+            } catch (err) {
+                console.log('Error checking authentication:', err);
+            }
+        };
+
+        // Add a small delay to ensure backend session is established
+        const timer = setTimeout(checkAuth, 500);
+        return () => clearTimeout(timer);
     }, [navigate]);
 
     const googleLogin = () => {
