@@ -1,5 +1,7 @@
 // Backend API calls for authentication
-const BACKEND_URL = 'https://js-backend-olive.vercel.app';
+const BACKEND_URL = 'https://js-backend-olive.vercel.app'; 
+
+// Backend URL = https://js-backend-olive.vercel.app/
 
 /**
  * Fetch the current authenticated user
