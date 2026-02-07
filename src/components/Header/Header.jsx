@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import colors from '../../utils/color';
 import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
 import ThemeToggle from '../../utils/WhiteDarkMode/ThemeToggle';
+import Hamburger from '../../utils/HamBurger/Hamburger';
 import { getCurrentUser, initializeGoogleLogin } from '../../utils/BackendCalls/authService';
 import logo from "../../assets/logo.png";
 
@@ -50,7 +51,8 @@ const Header = () => {
 					</div>
 				</div>
 
-				<nav className="flex items-center gap-4">
+				{/* Desktop nav — hidden on small screens */}
+				{/* <nav className="hidden md:flex items-center gap-4">
 					{user ? (
 						<div className="flex items-center gap-3">
 							{user.photo ? (
@@ -82,7 +84,16 @@ const Header = () => {
 						</button>
 					)}
 					<ThemeToggle />
-				</nav>
+				</nav> */}
+
+				{/* Hamburger — visible on small screens; opens drawer with user photo + theme */}
+				<div>
+					<Hamburger
+						user={user}
+						getInitials={getInitials}
+						onLoginClick={initializeGoogleLogin}
+					/>
+				</div>
 			</div>
 		</header>
 	);
