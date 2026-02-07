@@ -1,91 +1,61 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "../utils/WhiteDarkMode/useTheme";
+import Header from "./Header/Header";
+import Loader from "../utils/Loader/Loader";
+import { getCurrentUser, logout as logoutUser } from "../utils/BackendCalls/authService";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    const { isDark } = useTheme();
 
     useEffect(() => {
-        fetch('https://js-backend-olive.vercel.app/api/current_user', {
-            credentials: 'include'
-        })
-            .then(res => {
-                if (!res.ok) {
-                    if (res.status === 401) {
-                        window.location.href = '/';
-                    }
-                    return null;
+        const fetchUser = async () => {
+            try {
+                const user = await getCurrentUser();
+                if (user) {
+                    setUser(user);
+                } else {
+                    // User not authenticated, redirect to home
+                    window.location.href = '/';
                 }
-                return res.json();
-            })
-            .then(data => {
-                if (data) setUser(data);
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error('Error fetching user:', err);
                 window.location.href = '/';
-            });
-    }, []);
-
-    const logout = () => {
-        window.open('https://js-backend-olive.vercel.app/auth/logout', "_self");
-    };
-
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
-    const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setDropdownOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            }
         };
+        
+        fetchUser();
     }, []);
 
-    if (!user) return <div className="h-screen flex justify-center items-center">Loading...</div>;
+    const handleLogout = () => {
+        logoutUser();
+    };
+
+    if (!user) return <div className={`h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}><Loader /></div>;
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Navbar */}
-            <nav className="bg-white shadow-sm px-6 py-3 flex justify-between items-center">
-                <div className="text-2xl font-bold text-blue-600">MyApp</div>
-                <div className="relative" ref={dropdownRef}>
-                    <img 
-                        src={user.photo}
-                        alt="Profile"
-                        onClick={toggleDropdown}
-                        className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300 hover:border-blue-500"
-                    />
-                    {dropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md">
-                            <button 
-                                onClick={logout}
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </nav>
+        <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
+            <Header />
 
             {/* Welcome Message */}
             <div className="p-8">
-                <h1 className="text-3xl font-semibold text-gray-800">
+                <h1 className={`text-3xl font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
                     Welcome, {user.displayName} 👋
                 </h1>
-                <p className="mt-2 text-gray-600">
+                <p className={`mt-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     Email: {user.email}
                 </p>
+
+                <button
+                    onClick={handleLogout}
+                    className={`mt-6 px-6 py-2 rounded-lg font-medium transition ${isDark ? 'bg-red-900 text-red-100 hover:bg-red-800' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}
+                >
+                    Logout
+                </button>
             </div>
         </div>
     );
 };
+
 
 export default Dashboard;
