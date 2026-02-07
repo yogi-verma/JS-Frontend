@@ -4,7 +4,7 @@ import Header from "./Header/Header";
 import Section from "./Section/Section";
 import Reason from "./Reason/Reason";
 import Loader from "../utils/Loader/Loader";
-import { getCurrentUser, logout as logoutUser } from "../utils/BackendCalls/authService";
+import { getCurrentUser } from "../utils/BackendCalls/authService";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -29,10 +29,6 @@ const Dashboard = () => {
         fetchUser();
     }, []);
 
-    const handleLogout = () => {
-        logoutUser();
-    };
-
     if (!user) return <div className={`h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}><Loader /></div>;
 
     return (
@@ -42,15 +38,6 @@ const Dashboard = () => {
             <Section />
 
             <Reason />
-            {/* Welcome Message */}
-            <div className="p-8">
-                <h1 className={`text-3xl font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>  Welcome, {user.displayName} 👋  </h1>
-                <p className={`mt-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>  Email: {user.email}  </p>
-                <button
-                    onClick={handleLogout}
-                    className={`mt-6 px-6 py-2 rounded-lg font-medium transition ${isDark ? 'bg-red-900 text-red-100 hover:bg-red-800' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}
-                >  Logout  </button>
-            </div>
         </div>
     );
 };
