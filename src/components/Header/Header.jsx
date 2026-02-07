@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import colors from '../../utils/color';
 import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
 import ThemeToggle from '../../utils/WhiteDarkMode/ThemeToggle';
-import Hamburger from '../../utils/hamburger/Hamburger';
+import Hamburger from '../../utils/HamBurger/Hamburger';
 import { getCurrentUser, initializeGoogleLogin } from '../../utils/BackendCalls/authService';
 import logo from "../../assets/logo.png";
 
