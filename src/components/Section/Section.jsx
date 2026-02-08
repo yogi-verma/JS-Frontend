@@ -37,8 +37,7 @@ const Section = () => {
                             />
                         </h1>
                         <p
-                            className="text-base sm:text-lg leading-relaxed max-w-2xl lg:max-w-none transition-colors"
-                            style={{ color: isDark ? colors.textLight : colors.textDark }}
+                            className={`text-base sm:text-lg leading-relaxed max-w-2xl lg:max-w-none transition-colors ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
                         >
                             Join now to master practical frontend (JavaScript, React), system
                             design, and backend engineering—learning from foundational first

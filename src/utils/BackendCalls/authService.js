@@ -51,3 +51,81 @@ export const isAuthenticated = async () => {
         return false;
     }
 };
+
+
+/**
+ * Fetch all modules from the backend
+ * @returns {Promise<Array>} Array of modules
+ */
+export const getModules = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/modules`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include if you need cookies/auth
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch modules: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching modules:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch all lessons for a specific module
+ * @param {string} moduleId - The ID of the module
+ * @returns {Promise<Object>} Object containing lessons array and pagination
+ */
+export const getLessonsByModule = async (moduleId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/lessons/module/${moduleId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch lessons: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching lessons:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch a single lesson by ID
+ * @param {string} lessonId - The ID of the lesson
+ * @returns {Promise<Object>} Lesson object
+ */
+export const getLessonById = async (lessonId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/lessons/${lessonId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch lesson: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching lesson:', err);
+        throw err;
+    }
+};
