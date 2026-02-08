@@ -3,6 +3,7 @@ import { useTheme } from "../utils/WhiteDarkMode/useTheme";
 import Header from "./Header/Header";
 import Section from "./Section/Section";
 import Reason from "./Reason/Reason";
+import Modules from "./Modules/Modules";
 import Loader from "../utils/Loader/Loader";
 import { getCurrentUser } from "../utils/BackendCalls/authService";
 
@@ -36,8 +37,11 @@ const Dashboard = () => {
             <Header />
             
             <Section />
+            
+            <Modules />
 
             <Reason />
+
         </div>
     );
 };

@@ -29,7 +29,7 @@ const reasons = [
 const Reason = () => {
   const { isDark } = useTheme();
   return (
-    <section className={`text-center py-4 sm:py-6 px-3 sm:px-4 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}>
+    <section className={`text-center lg:py-10 md:py-8 sm:py-6 px-3 sm:px-4 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}>
       <h1
         className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-1 ${colors.blueTextGradient}`}
       >
@@ -42,7 +42,7 @@ const Reason = () => {
             className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-5 md:p-6 flex flex-col items-center hover:-translate-y-0.5 sm:hover:-translate-y-1 hover:shadow-lg sm:hover:shadow-xl transition cursor-pointer h-full min-w-0`}
           >
             {reason.icon}
-            <h3 className={`text-base sm:text-lg font-bold mb-1 text-center ${isDark ? "text-blue-400" : "text-blue-700"}`}>{reason.title}</h3>
+            <h3 className={`text-base sm:text-lg font-bold mb-1 text-center ${colors.blueTextGradient}`}>{reason.title}</h3>
             <p
               className="text-xs sm:text-sm max-w-xs sm:max-w-sm mx-auto text-center leading-relaxed"
               style={{ color: isDark ? colors.textLight : colors.textDark }}
