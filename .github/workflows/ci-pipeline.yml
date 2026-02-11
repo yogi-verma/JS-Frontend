@@ -3,6 +3,9 @@ name: Frontend CI Pipeline
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci-pipeline.yml'
 
 permissions:
   contents: write
@@ -24,19 +27,17 @@ jobs:
       id: cache
       uses: actions/cache@v3
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
         
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
         
     - name: Install dependencies
-      working-directory: ./frontend
-      run: |
-        npm ci
+      run: npm ci
+      working-directory: frontend
 
   lint-and-format:
     runs-on: ubuntu-latest
@@ -49,22 +50,14 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
         
     - name: Install dependencies
-      working-directory: ./frontend
-      run: |
-        npm ci
-        
-    - name: Setup ESLint
-      working-directory: ./frontend
-      run: |
-        npm install eslint
+      run: npm ci
+      working-directory: frontend
         
     - name: Run linting
-      working-directory: ./frontend
-      run: |
-        npm run lint || echo "⚠️ Linting issues found - check logs"
+      run: npm run lint || echo "⚠️ Linting issues found - check logs"
+      working-directory: frontend
 
   build-and-package:
     runs-on: ubuntu-latest
@@ -77,17 +70,14 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
         
     - name: Install dependencies
-      working-directory: ./frontend
-      run: |
-        npm ci
+      run: npm ci
+      working-directory: frontend
         
     - name: Build application
-      working-directory: ./frontend
-      run: |
-        npm run build
+      run: npm run build
+      working-directory: frontend
         
     - name: Create Git tag
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -109,25 +99,22 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
+        
+    - name: Restore cache
+      uses: actions/cache@v3
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
         
     - name: Install dependencies
       working-directory: ./frontend
-      run: |
-        npm ci
+      run: |Install dependencies
+      run: npm ci
+      working-directory: frontend
         
     - name: Build application
-      working-directory: ./frontend
-      run: |
-        npm run build
-        
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build-artifacts
-        path: |
-          frontend/dist/
-          frontend/package.json
+      run: npm run build
+      working-directory: frontenackage.json
           frontend/vite.config.js
         retention-days: 30
         
