@@ -11,6 +11,8 @@ const JavascriptLessonsByName = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('content');
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const { isDark } = useTheme();
     const { lessonId } = useParams();
     const navigate = useNavigate();
@@ -38,6 +40,47 @@ const JavascriptLessonsByName = () => {
             fetchLesson();
         }
     }, [lessonId]);
+
+    // Auto-advance carousel every 5 seconds
+    useEffect(() => {
+        if (!isImageModalOpen && lesson?.images && lesson.images.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => 
+                    (prevIndex + 1) % lesson.images.length
+                );
+            }, 5000);
+
+            return () => clearInterval(interval);
+        }
+    }, [isImageModalOpen, lesson?.images]);
+
+    const nextImage = () => {
+        if (lesson?.images) {
+            setCurrentImageIndex((prevIndex) => 
+                (prevIndex + 1) % lesson.images.length
+            );
+        }
+    };
+
+    const prevImage = () => {
+        if (lesson?.images) {
+            setCurrentImageIndex((prevIndex) => 
+                prevIndex === 0 ? lesson.images.length - 1 : prevIndex - 1
+            );
+        }
+    };
+
+    const goToImage = (index) => {
+        setCurrentImageIndex(index);
+    };
+
+    const openImageModal = () => {
+        setIsImageModalOpen(true);
+    };
+
+    const closeImageModal = () => {
+        setIsImageModalOpen(false);
+    };
 
     const getDifficultyColor = (difficulty) => {
         switch (difficulty) {
@@ -271,7 +314,7 @@ const JavascriptLessonsByName = () => {
 
                     {/* Navigation Tabs */}
                     <div className={`flex flex-wrap gap-2 mb-6 p-2 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
-                        {['content', 'objectives', 'resources', 'exercises'].map((tab) => (
+                        {['content', 'resources', 'interview'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -285,13 +328,11 @@ const JavascriptLessonsByName = () => {
                                 style={activeTab === tab ? { background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` } : {}}
                             >
                                 {tab === 'content' && '📖 '}
-                                {tab === 'objectives' && '🎯 '}
                                 {tab === 'resources' && '📚 '}
-                                {tab === 'exercises' && '✏️ '}
-                                {tab}
-                                {tab === 'objectives' && lesson.objectives && ` (${lesson.objectives.length})`}
+                                {tab === 'interview' && '💼 '}
+                                {tab === 'interview' ? 'Interview Questions' : tab}
                                 {tab === 'resources' && lesson.resources && ` (${lesson.resources.length})`}
-                                {tab === 'exercises' && lesson.exercises && ` (${lesson.exercises.length})`}
+                                {tab === 'interview' && lesson.interviewQuestions && ` (${lesson.interviewQuestions.length})`}
                             </button>
                         ))}
                     </div>
@@ -302,41 +343,97 @@ const JavascriptLessonsByName = () => {
                         {activeTab === 'content' && (
                             <div className="prose max-w-none">
                                 {renderContent(lesson.content)}
-                            </div>
-                        )}
-
-                        {/* Objectives Tab */}
-                        {activeTab === 'objectives' && (
-                            <div>
-                                <h2 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                                    🎯 Learning Objectives
-                                </h2>
-                                {lesson.objectives && lesson.objectives.length > 0 ? (
-                                    <div className="space-y-4">
-                                        {lesson.objectives.map((objective, index) => (
-                                            <div 
-                                                key={index}
-                                                className={`flex items-start gap-4 p-4 rounded-xl ${
-                                                    isDark ? 'bg-gray-700/50' : 'bg-gray-50'
-                                                }`}
-                                            >
-                                                <div 
-                                                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
-                                                    style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
-                                                >
-                                                    {index + 1}
+                                
+                                {/* Images Carousel Section */}
+                                {lesson.images && lesson.images.length > 0 && (
+                                    <div className="mt-8">
+                                        <div className="relative max-w-3xl mx-auto">
+                                            {/* Carousel Container */}
+                                            <div className={`relative overflow-hidden ${isDark ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+                                                {/* Image */}
+                                                <div className="relative cursor-pointer" style={{ height: '300px' }} onClick={openImageModal}>
+                                                    <img 
+                                                        src={lesson.images[currentImageIndex].url} 
+                                                        alt={lesson.images[currentImageIndex].alt || lesson.images[currentImageIndex].caption}
+                                                        className="w-full h-full object-contain"
+                                                    />
+                                                    
+                                                    {/* Previous Button */}
+                                                    {lesson.images.length > 1 && (
+                                                        <button
+                                                            onClick={prevImage}
+                                                            className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-all duration-300 ${
+                                                                isDark 
+                                                                    ? 'bg-gray-800/80 hover:bg-gray-800 text-white' 
+                                                                    : 'bg-white/80 hover:bg-white text-gray-800'
+                                                            } shadow-lg hover:scale-110`}
+                                                        >
+                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                            </svg>
+                                                        </button>
+                                                    )}
+                                                    
+                                                    {/* Next Button */}
+                                                    {lesson.images.length > 1 && (
+                                                        <button
+                                                            onClick={nextImage}
+                                                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-all duration-300 ${
+                                                                isDark 
+                                                                    ? 'bg-gray-800/80 hover:bg-gray-800 text-white' 
+                                                                    : 'bg-white/80 hover:bg-white text-gray-800'
+                                                            } shadow-lg hover:scale-110`}
+                                                        >
+                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                            </svg>
+                                                        </button>
+                                                    )}
                                                 </div>
-                                                <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                    {objective}
-                                                </p>
+                                                
+                                                {/* Caption */}
+                                                {lesson.images[currentImageIndex].caption && (
+                                                    <p className={`p-4 text-center text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                                        {lesson.images[currentImageIndex].caption}
+                                                    </p>
+                                                )}
                                             </div>
-                                        ))}
+                                            
+                                            {/* Indicators */}
+                                            {lesson.images.length > 1 && (
+                                                <div className="flex justify-center items-center gap-2 mt-4">
+                                                    {lesson.images.map((_, index) => (
+                                                        <button
+                                                            key={index}
+                                                            onClick={() => goToImage(index)}
+                                                            className={`transition-all duration-300 rounded-full ${
+                                                                index === currentImageIndex
+                                                                    ? 'w-8 h-2'
+                                                                    : 'w-2 h-2'
+                                                            }`}
+                                                            style={{
+                                                                background: index === currentImageIndex
+                                                                    ? `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})`
+                                                                    : isDark ? '#4B5563' : '#D1D5DB'
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            
+                                            {/* Image Counter */}
+                                            {lesson.images.length > 1 && (
+                                                <p className={`text-center mt-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                    {currentImageIndex + 1} / {lesson.images.length}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
-                                ) : (
-                                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No objectives defined for this lesson.</p>
                                 )}
                             </div>
                         )}
+
+
 
                         {/* Resources Tab */}
                         {activeTab === 'resources' && (
@@ -384,15 +481,15 @@ const JavascriptLessonsByName = () => {
                             </div>
                         )}
 
-                        {/* Exercises Tab */}
-                        {activeTab === 'exercises' && (
+                        {/* Interview Questions Tab */}
+                        {activeTab === 'interview' && (
                             <div>
                                 <h2 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                                    ✏️ Exercises
+                                    💼 Interview Questions
                                 </h2>
-                                {lesson.exercises && lesson.exercises.length > 0 ? (
+                                {lesson.interviewQuestions && lesson.interviewQuestions.length > 0 ? (
                                     <div className="space-y-6">
-                                        {lesson.exercises.map((exercise, index) => (
+                                        {lesson.interviewQuestions.map((item, index) => (
                                             <div 
                                                 key={index}
                                                 className={`p-5 rounded-xl border ${
@@ -401,65 +498,44 @@ const JavascriptLessonsByName = () => {
                                                         : 'bg-gray-50 border-gray-200'
                                                 }`}
                                             >
-                                                <div className="flex items-start justify-between mb-4">
+                                                <div className="flex flex-wrap items-center gap-3 mb-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                        exercise.type === 'multiple-choice' 
-                                                            ? isDark ? 'bg-purple-900/30 text-purple-400' : 'bg-purple-100 text-purple-700'
-                                                            : exercise.type === 'true-false'
-                                                            ? isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700'
-                                                            : isDark ? 'bg-orange-900/30 text-orange-400' : 'bg-orange-100 text-orange-700'
+                                                        item.difficulty === 'beginner' 
+                                                            ? isDark ? 'bg-emerald-900/30 text-emerald-400' : 'bg-emerald-100 text-emerald-700'
+                                                            : item.difficulty === 'intermediate'
+                                                            ? isDark ? 'bg-amber-900/30 text-amber-400' : 'bg-amber-100 text-amber-700'
+                                                            : isDark ? 'bg-rose-900/30 text-rose-400' : 'bg-rose-100 text-rose-700'
                                                     }`}>
-                                                        {exercise.type}
+                                                        {item.difficulty}
                                                     </span>
-                                                    <span className={`text-sm font-medium ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>
-                                                        {exercise.points} pts
-                                                    </span>
+                                                    {item.category && (
+                                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                            isDark ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-700'
+                                                        }`}>
+                                                            {item.category}
+                                                        </span>
+                                                    )}
                                                 </div>
 
                                                 <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                                                    Q{index + 1}. {exercise.question}
+                                                    Q{index + 1}. {item.question}
                                                 </h3>
 
-                                                {exercise.options && exercise.options.length > 0 && (
-                                                    <div className="space-y-2 mb-4">
-                                                        {exercise.options.map((option, optIndex) => (
-                                                            <div 
-                                                                key={optIndex}
-                                                                className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                                                                    isDark 
-                                                                        ? 'bg-gray-600/50 hover:bg-gray-600' 
-                                                                        : 'bg-white hover:bg-gray-100 border border-gray-200'
-                                                                }`}
-                                                            >
-                                                                <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                                                                    {String.fromCharCode(65 + optIndex)}. {option}
-                                                                </span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-
-                                                {exercise.type === 'code' && (
-                                                    <div className={`p-4 rounded-lg mb-4 ${isDark ? 'bg-gray-800' : 'bg-gray-900'}`}>
-                                                        <p className="text-gray-400 text-sm mb-2">Write your code here:</p>
-                                                        <textarea 
-                                                            className={`w-full h-24 bg-transparent text-green-400 font-mono text-sm resize-none focus:outline-none`}
-                                                            placeholder="// Your code..."
-                                                        />
-                                                    </div>
-                                                )}
-
-                                                <button 
-                                                    className="px-4 py-2 rounded-lg text-white font-medium text-sm transition-all duration-300 hover:shadow-md"
-                                                    style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
-                                                >
-                                                    Check Answer
-                                                </button>
+                                                <div className={`p-4 rounded-lg ${
+                                                    isDark ? 'bg-gray-600/30' : 'bg-white'
+                                                }`}>
+                                                    <p className={`font-medium mb-2 ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+                                                        Answer:
+                                                    </p>
+                                                    <p className={`leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                        {item.answer}
+                                                    </p>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No exercises available for this lesson.</p>
+                                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No interview questions available for this lesson.</p>
                                 )}
                             </div>
                         )}
@@ -467,6 +543,47 @@ const JavascriptLessonsByName = () => {
                     
                 </div>
             </div>
+
+            {/* Image Modal */}
+            {isImageModalOpen && lesson.images && lesson.images.length > 0 && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    onClick={closeImageModal}
+                    style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                >
+                    {/* Modal Content */}
+                    <div 
+                        className="relative max-w-7xl w-full"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close Button */}
+                        <button
+                            onClick={closeImageModal}
+                            className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-300 hover:scale-110 z-10"
+                        >
+                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        {/* Image */}
+                        <div className="relative rounded-xl overflow-hidden">
+                            <img 
+                                src={lesson.images[currentImageIndex].url} 
+                                alt={lesson.images[currentImageIndex].alt || lesson.images[currentImageIndex].caption}
+                                className="w-full h-auto max-h-[90vh] object-contain mx-auto"
+                            />
+                        </div>
+
+                        {/* Caption */}
+                        {lesson.images[currentImageIndex].caption && (
+                            <p className="text-center text-white mt-4 text-base">
+                                {lesson.images[currentImageIndex].caption}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
