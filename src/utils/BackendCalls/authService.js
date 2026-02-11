@@ -47,7 +47,7 @@ export const isAuthenticated = async () => {
     try {
         const user = await getCurrentUser();
         return user !== null;
-    } catch (err) {
+    } catch {
         return false;
     }
 };

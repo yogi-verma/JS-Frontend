@@ -54,7 +54,7 @@ const JavascriptLessons = () => {
         }
     };
 
-    const getTypeIcon = (type) => {
+    const _getTypeIcon = (type) => {
         switch (type) {
             case 'theory':
                 return '📖';
@@ -242,7 +242,7 @@ const JavascriptLessons = () => {
                                         {/* Start Button */}
                                         <button 
                                             onClick={() => navigate(`/lesson/${lesson._id}`)}
-                                            className="w-full py-2.5 rounded-xl text-white font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:opacity-90 flex items-center justify-center gap-2"
+                                            className="w-full py-2.5 hover:cursor-pointer rounded-xl text-white font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:opacity-90 flex items-center justify-center gap-2"
                                             style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
                                         >
                                             <span>Start Lesson</span>

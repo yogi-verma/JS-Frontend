@@ -117,9 +117,9 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 									onLoginClick();
 									setIsOpen(false);
 								}}
-								className={`w-full py-2.5 px-4 rounded-lg font-medium transition ${isDark ? 'bg-blue-900 text-blue-100 hover:bg-blue-800' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
+								className={`w-full py-2.5 px-4 hover:cursor-pointer rounded-lg font-medium transition ${isDark ? 'bg-blue-900 text-blue-100 hover:bg-blue-800' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
 							>
-								Sign in / Dashboard
+								Sign In / Log In
 							</button>
 						)
 					)}
