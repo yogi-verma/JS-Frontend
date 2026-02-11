@@ -104,14 +104,20 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
         
     - name: Install dependencies
-      working-directory: ./frontend
-      run: |Install dependencies
       run: npm ci
       working-directory: frontend
         
     - name: Build application
       run: npm run build
-      working-directory: frontenackage.json
+      working-directory: frontend
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build-v${{ github.run_number }}
+        path: |
+          frontend/dist
+          frontend/package.json
           frontend/vite.config.js
         retention-days: 30
         
