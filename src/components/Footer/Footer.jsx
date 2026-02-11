@@ -1,21 +1,21 @@
 import colors from '../../utils/color';
+import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
 
 const Footer = () => {
-	const gradient = `linear-gradient(90deg, ${colors.blueMid}, ${colors.blueDark})`;
+	const { isDark } = useTheme();
+	const background = isDark ? '#1F2937' : colors.white;
+	const borderColor = isDark ? '#374151' : '#E0E7FF';
 
 	return (
-		<footer style={{ background: gradient }} className="text-white mt-12">
-			<div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
-				<div>
-					<h3 className="font-semibold">MyApp</h3>
-					<p className="text-sm text-white/90">© {new Date().getFullYear()} MyApp. All rights reserved.</p>
-				</div>
-
-				<div className="flex gap-4">
-					<a href="#" className="text-white/90 hover:underline">Privacy</a>
-					<a href="#" className="text-white/90 hover:underline">Terms</a>
-					<a href="#" className="text-white/90 hover:underline">Contact</a>
-				</div>
+		<footer
+			style={{ background, borderColor }}
+			className={`mt-12 border-t ${isDark ? 'text-gray-200' : 'text-gray-800'}`}
+		>
+			<div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+				<p className="text-sm">@DevCrux all right reserved</p>
+				<p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+					Made with 💙 by Yogesh Verma
+				</p>
 			</div>
 		</footer>
 	);

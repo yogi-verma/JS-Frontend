@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import colors from '../../utils/color';
 import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
 import ThemeToggle from '../../utils/WhiteDarkMode/ThemeToggle';
@@ -9,6 +10,7 @@ import logo from "../../assets/logo.png";
 const Header = () => {
 	const { isDark } = useTheme();
 	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -36,7 +38,7 @@ const Header = () => {
 				background: isDark ? '#1F2937' : colors.white,
 				borderColor: isDark ? '#374151' : '#E0E7FF'
 			}}
-			className={`text-gray-800 border-b shadow-sm ${isDark ? 'text-gray-100' : ''}`}
+			className={`sticky top-0 z-50 text-gray-800 border-b shadow-sm ${isDark ? 'text-gray-100' : ''}`}
 		>
 			<div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 				<div className="flex items-center">
@@ -46,45 +48,15 @@ const Header = () => {
 						className="object-contain w-10 h-10"
 					/>
 					<div>
-						<h1 className={`text-md font-semibold ${colors.blueTextGradient}`}>DevCrux</h1>
+						<h1
+							className={`text-md font-semibold ${colors.blueTextGradient} cursor-pointer`}
+							onClick={() => navigate('/dashboard')}
+						>
+							DevCrux
+						</h1>
 						<p className={`text-xs opacity-90 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Full Stack Solution</p>
 					</div>
 				</div>
-
-				{/* Desktop nav — hidden on small screens */}
-				{/* <nav className="hidden md:flex items-center gap-4">
-					{user ? (
-						<div className="flex items-center gap-3">
-							{user.photo ? (
-								<img
-									src={user.photo}
-									alt="Profile"
-									title={user.displayName}
-									className={`w-10 h-10 rounded-full border-2 shadow-md ${isDark ? 'border-gray-600' : 'border-gray-300'}`}
-								/>
-							) : (
-								<div
-									className="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white border-2 shadow-md"
-									style={{
-										background: colors.blueLight,
-										borderColor: isDark ? '#374151' : '#E0E7FF'
-									}}
-									title={user.displayName}
-								>
-									{getInitials(user.displayName)}
-								</div>
-							)}
-						</div>
-					) : (
-						<button
-							onClick={initializeGoogleLogin}
-							className={`transition cursor-pointer font-medium ${isDark ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'}`}
-						>
-							Dashboard
-						</button>
-					)}
-					<ThemeToggle />
-				</nav> */}
 
 				{/* Hamburger — visible on small screens; opens drawer with user photo + theme */}
 				<div>

@@ -6,6 +6,7 @@ import Reason from "./Reason/Reason";
 import Modules from "./Modules/Modules";
 import Loader from "../utils/Loader/Loader";
 import { getCurrentUser } from "../utils/BackendCalls/authService";
+import Footer from "./Footer/Footer";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -41,6 +42,8 @@ const Dashboard = () => {
             <Modules />
 
             <Reason />
+
+            <Footer />
 
         </div>
     );
