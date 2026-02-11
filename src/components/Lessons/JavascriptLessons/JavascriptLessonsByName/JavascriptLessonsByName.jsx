@@ -52,7 +52,7 @@ const JavascriptLessonsByName = () => {
         }
     };
 
-    const getTypeIcon = (type) => {
+    const _getTypeIcon = (type) => {
         switch (type) {
             case 'theory': return '📖';
             case 'practice': return '💻';
@@ -81,7 +81,7 @@ const JavascriptLessonsByName = () => {
         const elements = [];
         let inCodeBlock = false;
         let codeContent = [];
-        let codeLanguage = '';
+        let _codeLanguage = '';
 
         lines.forEach((line, index) => {
             // Code block start/end
@@ -96,7 +96,7 @@ const JavascriptLessonsByName = () => {
                     inCodeBlock = false;
                 } else {
                     inCodeBlock = true;
-                    codeLanguage = line.trim().slice(3);
+                    _codeLanguage = line.trim().slice(3);
                 }
                 return;
             }
@@ -235,7 +235,7 @@ const JavascriptLessonsByName = () => {
         );
     }
 
-    const difficultyColor = getDifficultyColor(lesson.difficulty);
+    const _difficultyColor = getDifficultyColor(lesson.difficulty);
 
     return (
         <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 to-blue-50'}`}>
