@@ -327,12 +327,19 @@ const JavascriptLessonsByName = () => {
                                 }`}
                                 style={activeTab === tab ? { background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` } : {}}
                             >
-                                {tab === 'content' && '📖 '}
-                                {tab === 'resources' && '📚 '}
-                                {tab === 'interview' && '💼 '}
-                                {tab === 'interview' ? 'Interview Questions' : tab}
-                                {tab === 'resources' && lesson.resources && ` (${lesson.resources.length})`}
-                                {tab === 'interview' && lesson.interviewQuestions && ` (${lesson.interviewQuestions.length})`}
+                                {/* Icon (always visible) */}
+                                <span>
+                                    {tab === 'content' && '📖'}
+                                    {tab === 'resources' && '📚'}
+                                    {tab === 'interview' && '💼'}
+                                </span>
+                                
+                                {/* Text (hidden on small screens, visible on sm and up) */}
+                                <span className="hidden sm:inline">
+                                    {' '}{tab === 'interview' ? 'Interview Questions' : tab}
+                                    {tab === 'resources' && lesson.resources && ` (${lesson.resources.length})`}
+                                    {tab === 'interview' && lesson.interviewQuestions && ` (${lesson.interviewQuestions.length})`}
+                                </span>
                             </button>
                         ))}
                     </div>
