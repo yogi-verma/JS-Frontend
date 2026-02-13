@@ -1,31 +1,16 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import colors from '../../utils/color';
 import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
+import { useUser } from '../../utils/UserContext/UserContext';
 import ThemeToggle from '../../utils/WhiteDarkMode/ThemeToggle';
 import Hamburger from '../../utils/HamBurger/Hamburger';
-import { getCurrentUser, initializeGoogleLogin } from '../../utils/BackendCalls/authService';
+import { initializeGoogleLogin } from '../../utils/BackendCalls/authService';
 import logo from "../../assets/logo.png";
 
 const Header = () => {
 	const { isDark } = useTheme();
-	const [user, setUser] = useState(null);
+	const { user } = useUser();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const user = await getCurrentUser();
-				if (user) {
-					setUser(user);
-				}
-			} catch (err) {
-				console.error('Error fetching user:', err);
-			}
-		};
-
-		fetchUser();
-	}, []);
 
 	const getInitials = (displayName) => {
 		if (!displayName) return '?';
