@@ -11,6 +11,11 @@ const JavascriptCompiler = () => {
   const [output, setOutput] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Warn user before leaving page or refreshing
   useEffect(() => {
     const handleBeforeUnload = (e) => {
