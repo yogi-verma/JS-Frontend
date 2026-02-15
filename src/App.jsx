@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import JavascriptLessons from './components/Lessons/JavascriptLessons/JavascriptLessons';
 import JavascriptLessonsByName from './components/Lessons/JavascriptLessons/JavascriptLessonsByName/JavascriptLessonsByName';
 import JavascriptCompiler from './utils/JavascriptCompiler/JavascriptCompiler';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
     return (
@@ -44,6 +45,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <JavascriptCompiler />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/dashboard/profile" 
+                            element={
+                                <ProtectedRoute>
+                                    <UserProfile />
                                 </ProtectedRoute>
                             } 
                         />
