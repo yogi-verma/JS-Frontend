@@ -4,25 +4,36 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../utils/UserContext/UserContext';
 import { useTheme } from '../../utils/WhiteDarkMode/useTheme';
+import { useNotification } from '../../utils/Notification';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import colors from '../../utils/color';
-import { FiMail, FiUser, FiFileText, FiArrowLeft, FiX } from 'react-icons/fi';
+import { FiMail, FiUser, FiFileText, FiArrowLeft, FiX, FiEdit } from 'react-icons/fi';
+import { updateDisplayName, updateBio } from '../../utils/BackendCalls/authService';
 
 const UserProfile = () => {
-    const { user } = useUser();
+    const { user, refreshUser } = useUser();
     const { isDark } = useTheme();
+    const { showSuccess, showError } = useNotification();
     const navigate = useNavigate();
     const [showImageModal, setShowImageModal] = useState(false);
+    const [showEditNameModal, setShowEditNameModal] = useState(false);
+    const [showEditBioModal, setShowEditBioModal] = useState(false);
+    const [newDisplayName, setNewDisplayName] = useState('');
+    const [newBio, setNewBio] = useState('');
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updateError, setUpdateError] = useState('');
 
     useEffect(() => {
         const handleEscape = (e) => {
-            if (e.key === 'Escape' && showImageModal) {
-                setShowImageModal(false);
+            if (e.key === 'Escape') {
+                if (showEditNameModal) setShowEditNameModal(false);
+                else if (showEditBioModal) setShowEditBioModal(false);
+                else if (showImageModal) setShowImageModal(false);
             }
         };
         
-        if (showImageModal) {
+        if (showImageModal || showEditNameModal || showEditBioModal) {
             document.addEventListener('keydown', handleEscape);
             document.body.style.overflow = 'hidden';
         }
@@ -31,7 +42,60 @@ const UserProfile = () => {
             document.removeEventListener('keydown', handleEscape);
             document.body.style.overflow = '';
         };
-    }, [showImageModal]);
+    }, [showImageModal, showEditNameModal, showEditBioModal]);
+
+    const handleUpdateDisplayName = async () => {
+        if (!newDisplayName.trim()) {
+            setUpdateError('Display name cannot be empty');
+            return;
+        }
+
+        setIsUpdating(true);
+        setUpdateError('');
+
+        try {
+            await updateDisplayName(newDisplayName.trim());
+            await refreshUser(); // Refresh user data to reflect changes
+            setShowEditNameModal(false);
+            setNewDisplayName('');
+            showSuccess('Display name updated successfully!');
+        } catch (error) {
+            setUpdateError(error.message || 'Failed to update display name');
+            showError(error.message || 'Failed to update display name');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const openEditNameModal = () => {
+        setNewDisplayName(user.displayName || '');
+        setUpdateError('');
+        setShowEditNameModal(true);
+    };
+
+    const handleUpdateBio = async () => {
+        setIsUpdating(true);
+        setUpdateError('');
+
+        try {
+            await updateBio(newBio.trim());
+            await refreshUser(); // Refresh user data to reflect changes
+            setShowEditBioModal(false);
+            setNewBio('');
+            showSuccess('Bio updated successfully!');
+        } catch (error) {
+            setUpdateError(error.message || 'Failed to update bio');
+            showError(error.message || 'Failed to update bio');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const openEditBioModal = () => {
+        setNewBio(user.bio || '');
+        setUpdateError('');
+        setShowEditBioModal(true);
+    };
 
     if (!user) {
         return (
@@ -156,18 +220,27 @@ const UserProfile = () => {
                             border: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`
                         }}
                     >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div 
-                                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                                style={{ 
-                                    background: isDark ? 'rgba(96, 165, 250, 0.2)' : 'rgba(96, 165, 250, 0.1)'
-                                }}
-                            >
-                                <FiUser className="w-5 h-5" style={{ color: colors.blueLight }} />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div 
+                                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                                    style={{ 
+                                        background: isDark ? 'rgba(96, 165, 250, 0.2)' : 'rgba(96, 165, 250, 0.1)'
+                                    }}
+                                >
+                                    <FiUser className="w-5 h-5" style={{ color: colors.blueLight }} />
+                                </div>
+                                <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                    Display Name
+                                </h3>
                             </div>
-                            <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                                Display Name
-                            </h3>
+                            <button
+                                onClick={openEditNameModal}
+                                className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                                title="Edit display name"
+                            >
+                                <FiEdit className="w-4 h-4" style={{ color: isDark ? colors.blueLight : colors.blueMid }} />
+                            </button>
                         </div>
                         <p className={`text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                             {user.displayName || 'Not set'}
@@ -208,18 +281,27 @@ const UserProfile = () => {
                             border: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`
                         }}
                     >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div 
-                                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                                style={{ 
-                                    background: isDark ? 'rgba(30, 64, 175, 0.2)' : 'rgba(30, 64, 175, 0.1)'
-                                }}
-                            >
-                                <FiFileText className="w-5 h-5" style={{ color: colors.blueDark }} />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div 
+                                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                                    style={{ 
+                                        background: isDark ? 'rgba(30, 64, 175, 0.2)' : 'rgba(30, 64, 175, 0.1)'
+                                    }}
+                                >
+                                    <FiFileText className="w-5 h-5" style={{ color: colors.blueDark }} />
+                                </div>
+                                <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                    Bio
+                                </h3>
                             </div>
-                            <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                                Bio
-                            </h3>
+                            <button
+                                onClick={openEditBioModal}
+                                className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                                title="Edit bio"
+                            >
+                                <FiEdit className="w-4 h-4" style={{ color: isDark ? colors.blueLight : colors.blueMid }} />
+                            </button>
                         </div>
                         <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                             {user.bio || 'No bio added yet. Tell us about yourself!'}
@@ -297,6 +379,225 @@ const UserProfile = () => {
                     </div>
                 </div>
             )}
+
+            {/* Edit Display Name Modal */}
+            <div
+                className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 ${
+                    showEditNameModal ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+                aria-hidden={!showEditNameModal}
+            >
+                {/* Backdrop */}
+                <div
+                    className="absolute inset-0 backdrop-blur-sm"
+                    style={{
+                        background: `${isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.7)'}`
+                    }}
+                    onClick={() => setShowEditNameModal(false)}
+                    aria-hidden="true"
+                />
+                
+                {/* Modal Content */}
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="edit-name-modal-title"
+                    className="relative w-full max-w-md rounded-xl shadow-2xl p-6"
+                    style={{ 
+                        background: isDark ? '#1F2937' : colors.white,
+                        border: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Modal Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 
+                            id="edit-name-modal-title" 
+                            className={`text-xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}
+                        >
+                            Edit Display Name
+                        </h2>
+                        <button
+                            type="button"
+                            onClick={() => setShowEditNameModal(false)}
+                            className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-600'}`}
+                            aria-label="Close modal"
+                        >
+                            <FiX className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Input Field */}
+                    <div className="mb-6">
+                        <label 
+                            htmlFor="displayName" 
+                            className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                        >
+                            Display Name
+                        </label>
+                        <input
+                            id="displayName"
+                            type="text"
+                            value={newDisplayName}
+                            onChange={(e) => setNewDisplayName(e.target.value)}
+                            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
+                                isDark 
+                                    ? 'bg-gray-800 border-gray-600 text-gray-100 focus:border-blue-500' 
+                                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                            }`}
+                            placeholder="Enter your display name"
+                            disabled={isUpdating}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !isUpdating) {
+                                    handleUpdateDisplayName();
+                                }
+                            }}
+                        />
+                        {updateError && (
+                            <p className="mt-2 text-sm text-red-500">
+                                {updateError}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 justify-end">
+                        <button
+                            type="button"
+                            onClick={() => setShowEditNameModal(false)}
+                            className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-80 ${
+                                isDark 
+                                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
+                                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                            }`}
+                            disabled={isUpdating}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleUpdateDisplayName}
+                            className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-90 ${
+                                isUpdating ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            style={{ 
+                                background: isDark ? colors.blueDark : colors.blueLight,
+                                color: colors.textLight 
+                            }}
+                            disabled={isUpdating}
+                        >
+                            {isUpdating ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Edit Bio Modal */}
+            <div
+                className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 ${
+                    showEditBioModal ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+                aria-hidden={!showEditBioModal}
+            >
+                {/* Backdrop */}
+                <div
+                    className="absolute inset-0 backdrop-blur-sm"
+                    style={{
+                        background: `${isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.7)'}`
+                    }}
+                    onClick={() => setShowEditBioModal(false)}
+                    aria-hidden="true"
+                />
+                
+                {/* Modal Content */}
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="edit-bio-modal-title"
+                    className="relative w-full max-w-md rounded-xl shadow-2xl p-6"
+                    style={{ 
+                        background: isDark ? '#1F2937' : colors.white,
+                        border: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Modal Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 
+                            id="edit-bio-modal-title" 
+                            className={`text-xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}
+                        >
+                            Edit Bio
+                        </h2>
+                        <button
+                            type="button"
+                            onClick={() => setShowEditBioModal(false)}
+                            className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-600'}`}
+                            aria-label="Close modal"
+                        >
+                            <FiX className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Input Field */}
+                    <div className="mb-6">
+                        <label 
+                            htmlFor="bio" 
+                            className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                        >
+                            Bio
+                        </label>
+                        <textarea
+                            id="bio"
+                            value={newBio}
+                            onChange={(e) => setNewBio(e.target.value)}
+                            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none resize-none ${
+                                isDark 
+                                    ? 'bg-gray-800 border-gray-600 text-gray-100 focus:border-blue-500' 
+                                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                            }`}
+                            placeholder="Tell us about yourself..."
+                            disabled={isUpdating}
+                            rows={5}
+                        />
+                        {updateError && (
+                            <p className="mt-2 text-sm text-red-500">
+                                {updateError}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 justify-end">
+                        <button
+                            type="button"
+                            onClick={() => setShowEditBioModal(false)}
+                            className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-80 ${
+                                isDark 
+                                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
+                                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                            }`}
+                            disabled={isUpdating}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleUpdateBio}
+                            className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-90 ${
+                                isUpdating ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            style={{ 
+                                background: isDark ? colors.blueDark : colors.blueLight,
+                                color: colors.textLight 
+                            }}
+                            disabled={isUpdating}
+                        >
+                            {isUpdating ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
