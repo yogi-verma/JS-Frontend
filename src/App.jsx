@@ -1,18 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './utils/WhiteDarkMode/ThemeContext';
 import { UserProvider } from './utils/UserContext/UserContext';
+import { NotificationProvider } from './utils/Notification';
 import ProtectedRoute from './utils/ProtectedRoute/ProtectedRoute';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import JavascriptLessons from './components/Lessons/JavascriptLessons/JavascriptLessons';
 import JavascriptLessonsByName from './components/Lessons/JavascriptLessons/JavascriptLessonsByName/JavascriptLessonsByName';
 import JavascriptCompiler from './utils/JavascriptCompiler/JavascriptCompiler';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
     return (
         <ThemeProvider>
-            <UserProvider>
-                <Router>
+            <NotificationProvider>
+                <UserProvider>
+                    <Router>
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route 
@@ -47,9 +50,18 @@ function App() {
                                 </ProtectedRoute>
                             } 
                         />
+                        <Route 
+                            path="/dashboard/profile" 
+                            element={
+                                <ProtectedRoute>
+                                    <UserProfile />
+                                </ProtectedRoute>
+                            } 
+                        />
                     </Routes>
                 </Router>
-            </UserProvider>
+                </UserProvider>
+            </NotificationProvider>
         </ThemeProvider>
     );
 }

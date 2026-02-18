@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useTheme } from '../WhiteDarkMode/useTheme';
 import ThemeToggle from '../WhiteDarkMode/ThemeToggle';
@@ -26,6 +27,7 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showLogoutModal, setShowLogoutModal] = useState(false);
 	const { isDark } = useTheme();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const handleEscape = (e) => {
@@ -85,7 +87,14 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 
 				<div className="flex-1 flex flex-col gap-4 p-4 overflow-auto">
 					{user ? (
-						<div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }}>
+						<div 
+							className="flex items-center gap-3 p-3 rounded-xl hover:cursor-pointer hover:opacity-80 transition-opacity" 
+							style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }}
+							onClick={() => {
+								navigate('/dashboard/profile');
+								setIsOpen(false);
+							}}
+						>
 							{user.photo ? (
 								<img
 									src={user.photo}
