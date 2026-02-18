@@ -1,5 +1,5 @@
 // Backend API calls for authentication
-const BACKEND_URL = 'https://js-backend-olive.vercel.app'; 
+const BACKEND_URL = 'https://js-backend-olive.vercel.app'; // Change to your backend URL in production
 
 // Backend URL = https://js-backend-olive.vercel.app/
 
@@ -127,6 +127,90 @@ export const deleteAccount = async () => {
         return await res.json();
     } catch (err) {
         console.error('Error deleting account:', err);
+        throw err;
+    }
+};
+
+/**
+ * Update user photo
+ * @param {string} photo - The new photo URL
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updatePhoto = async (photo) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-photo`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ photo })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update photo: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating photo:', err);
+        throw err;
+    }
+};
+
+/**
+ * Request email change - sends verification code to new email
+ * @param {string} newEmail - The new email address
+ * @returns {Promise<Object>} Success message
+ */
+export const requestEmailChange = async (newEmail) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/request-email-change`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ newEmail })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to request email change: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error requesting email change:', err);
+        throw err;
+    }
+};
+
+/**
+ * Verify email change with code
+ * @param {string} code - The verification code
+ * @returns {Promise<Object>} Updated user object
+ */
+export const verifyEmailChange = async (code) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/verify-email-change`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ code })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to verify email change: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error verifying email change:', err);
         throw err;
     }
 };
