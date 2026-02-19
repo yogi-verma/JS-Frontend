@@ -8,6 +8,7 @@ import Section from "./Section/Section";
 import Footer from "./Footer/Footer";
 import Reason from "./Reason/Reason";
 import SpecialButton from "./SpecialButton/SpecialButton";
+import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -29,6 +30,8 @@ const Home = () => {
                 showLoginButton={!isAuthenticated}
                 onLoginClick={initializeGoogleLogin}
             />
+
+            <JavascriptInterviewQuestionsButton onLearnMoreClick={initializeGoogleLogin} />
 
             <Reason />
 
