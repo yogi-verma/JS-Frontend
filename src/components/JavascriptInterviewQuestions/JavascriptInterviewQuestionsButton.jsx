@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import colors from "../../utils/color";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
+import { useUser } from "../../utils/UserContext/UserContext";
 
-const JavascriptInterviewQuestionsButton = () => {
+const JavascriptInterviewQuestionsButton = ({ onLearnMoreClick }) => {
   const { isDark } = useTheme();
   const navigate = useNavigate();
+  const { isAuthenticated } = useUser();
   const [timeLeft, setTimeLeft] = useState({
     days: 7,
     hours: 0,
@@ -14,11 +16,10 @@ const JavascriptInterviewQuestionsButton = () => {
   });
 
   useEffect(() => {
-    // Set launch date to 7 days from now
-    const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 7);
+    // Launch date: February 25, 2026 at 00:00:00
+    const launchDate = new Date('2026-02-25T00:00:00');
 
-    const timer = setInterval(() => {
+    const updateTimer = () => {
       const now = new Date().getTime();
       const distance = launchDate.getTime() - now;
 
@@ -31,9 +32,14 @@ const JavascriptInterviewQuestionsButton = () => {
         });
       } else {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(timer);
       }
-    }, 1000);
+    };
+
+    // Update immediately
+    updateTimer();
+
+    // Then update every second
+    const timer = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timer);
   }, []);
@@ -121,7 +127,13 @@ const JavascriptInterviewQuestionsButton = () => {
           </div>
 
           <button
-            onClick={() => navigate("/dashboard/interview-questions")}
+            onClick={() => {
+              if (isAuthenticated) {
+                navigate("/dashboard/interview-questions");
+              } else if (onLearnMoreClick) {
+                onLearnMoreClick();
+              }
+            }}
             className="inline-flex items-center hover:cursor-pointer justify-center rounded-xl px-5 py-3 text-sm sm:text-base font-bold transition-all duration-300 hover:scale-[1.02] whitespace-nowrap"
             style={{
               background: isDark

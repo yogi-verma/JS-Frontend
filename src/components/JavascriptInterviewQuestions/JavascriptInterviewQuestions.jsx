@@ -14,12 +14,16 @@ const JavascriptInterviewQuestions = () => {
     seconds: 0,
   });
 
+  // Scroll to top when component mounts
   useEffect(() => {
-    // Set launch date to 7 days from now
-    const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 7);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
-    const timer = setInterval(() => {
+  useEffect(() => {
+    // Launch date: February 25, 2026 at 00:00:00
+    const launchDate = new Date('2026-02-25T00:00:00');
+
+    const updateTimer = () => {
       const now = new Date().getTime();
       const distance = launchDate.getTime() - now;
 
@@ -32,9 +36,14 @@ const JavascriptInterviewQuestions = () => {
         });
       } else {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(timer);
       }
-    }, 1000);
+    };
+
+    // Update immediately
+    updateTimer();
+
+    // Then update every second
+    const timer = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timer);
   }, []);
