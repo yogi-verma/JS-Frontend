@@ -23,7 +23,7 @@ const Section = ({ showLoginButton = false, onLoginClick }) => {
                     {/* Text block — left-aligned, wider to reduce paragraph wrapping */}
                     <div className="min-w-0 order-2 lg:order-1 lg:flex-none lg:min-w-[32rem] lg:max-w-[42rem] lg:mr-5">
                         <h1
-                            className={`text-3xl sm:text-4xl lg:text-4xl xl:text-5xl font-bold leading-tight mb-3 sm:mb-4 ${colors.blueTextGradient}`}
+                            className={`text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold leading-tight mb-3 sm:mb-4 ${colors.blueTextGradient}`}
                         >
                             <Typewriter
                                 words={headings}
@@ -37,7 +37,7 @@ const Section = ({ showLoginButton = false, onLoginClick }) => {
                             />
                         </h1>
                         <p
-                            className={`text-base sm:text-lg leading-relaxed max-w-2xl lg:max-w-none transition-colors ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                            className={`text-sm sm:text-base leading-relaxed max-w-2xl lg:max-w-none transition-colors ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
                         >
                             Join now to master practical frontend (JavaScript, React), system
                             design, and backend engineering—learning from foundational first
@@ -48,14 +48,14 @@ const Section = ({ showLoginButton = false, onLoginClick }) => {
                         {showLoginButton ? (
                             <button
                                 onClick={onLoginClick}
-                                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm sm:text-base font-semibold text-white transition-all duration-300 hover:shadow-lg hover:cursor-pointer hover:scale-105 shadow-md"
+                                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-lg hover:cursor-pointer hover:scale-105 shadow-md"
                                 style={{
                                     background: `linear-gradient(90deg, ${colors.blueLight}, ${colors.blueMid})`
                                 }}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
+                                    className="h-4 w-4"
                                     viewBox="0 0 24 24"
                                 >
                                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

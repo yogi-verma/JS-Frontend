@@ -215,6 +215,34 @@ export const verifyEmailChange = async (code) => {
     }
 };
 
+/**
+ * Update user status
+ * @param {string|null} status - The new status (busy, focusing, building, optimistic, or null)
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateStatus = async (status) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ status })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update status: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating status:', err);
+        throw err;
+    }
+};
+
 
 /**
  * Fetch all modules from the backend
@@ -289,6 +317,118 @@ export const getLessonById = async (lessonId) => {
         return await res.json();
     } catch (err) {
         console.error('Error fetching lesson:', err);
+        throw err;
+    }
+};
+
+/**
+ * Update user website
+ * @param {string} website - The new website URL
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateWebsite = async (website) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-website`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ website })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update website: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating website:', err);
+        throw err;
+    }
+};
+
+/**
+ * Update user social links
+ * @param {Object} socialLinks - Object with github, linkedin, twitter
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateSocialLinks = async (socialLinks) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-social-links`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(socialLinks)
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update social links: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating social links:', err);
+        throw err;
+    }
+};
+
+/**
+ * Update user company
+ * @param {string} company - The new company name
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateCompany = async (company) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-company`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ company })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update company: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating company:', err);
+        throw err;
+    }
+};
+
+/**
+ * Update user title
+ * @param {string} title - The new job title
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateTitle = async (title) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/user/update-title`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ title })
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to update title: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error updating title:', err);
         throw err;
     }
 };

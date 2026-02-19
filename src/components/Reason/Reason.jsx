@@ -49,21 +49,21 @@ const Reason = () => {
     <section
       className={`text-center py-6 sm:py-7 md:py-8 lg:py-10 px-4 sm:px-6 md:px-8 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}
     >
-      <h2 className={`text-4xl font-bold mb-4 ${colors.blueTextGradient}`}>
+      <h2 className={`text-3xl font-bold mb-3 ${colors.blueTextGradient}`}>
         Why learn FullStack here?
       </h2>
-      <p className={`text-lg ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+      <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
         Real skills, real projects, real community. We go beyond the basics to make you a confident, job-ready developer.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-7 mt-6 sm:mt-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mt-5 sm:mt-6 max-w-6xl mx-auto">
         {reasons.map((reason, idx) => (
           <div
             key={idx}
-            className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-5 md:p-6 flex flex-col items-center hover:-translate-y-0.5 sm:hover:-translate-y-1 hover:shadow-lg sm:hover:shadow-xl transition cursor-pointer h-full min-w-0`}
+            className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-lg sm:rounded-xl shadow-sm sm:shadow-md p-3 sm:p-4 md:p-5 flex flex-col items-center hover:-translate-y-0.5 sm:hover:-translate-y-1 hover:shadow-md sm:hover:shadow-lg transition cursor-pointer h-full min-w-0`}
           >
             {reason.icon}
             <h3
-              className={`text-base sm:text-lg font-bold mb-1 text-center ${colors.blueTextGradient}`}
+              className={`text-sm sm:text-base font-bold mb-1 text-center ${colors.blueTextGradient}`}
             >
               {reason.title}
             </h3>

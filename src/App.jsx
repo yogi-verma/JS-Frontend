@@ -9,6 +9,7 @@ import JavascriptLessons from './components/Lessons/JavascriptLessons/Javascript
 import JavascriptLessonsByName from './components/Lessons/JavascriptLessons/JavascriptLessonsByName/JavascriptLessonsByName';
 import JavascriptCompiler from './utils/JavascriptCompiler/JavascriptCompiler';
 import UserProfile from './components/UserProfile/UserProfile';
+import JavascriptInterviewQuestions from './components/JavascriptInterviewQuestions/JavascriptInterviewQuestions';
 
 function App() {
     return (
@@ -55,6 +56,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <UserProfile />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/dashboard/interview-questions" 
+                            element={
+                                <ProtectedRoute>
+                                    <JavascriptInterviewQuestions />
                                 </ProtectedRoute>
                             } 
                         />

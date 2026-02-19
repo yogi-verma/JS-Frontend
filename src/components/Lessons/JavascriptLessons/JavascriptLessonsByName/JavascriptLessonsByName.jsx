@@ -239,22 +239,22 @@ const JavascriptLessonsByName = () => {
                 <div className="py-12 px-6">
                     <div className="max-w-4xl mx-auto">
                         <div 
-                            className="rounded-2xl p-8 border shadow-lg"
+                            className="rounded-lg p-5 border shadow-md"
                             style={{
                                 background: isDark ? '#1F2937' : '#FEF2F2',
                                 borderColor: isDark ? '#EF4444' : '#FCA5A5'
                             }}
                         >
-                            <div className="flex items-center gap-4 mb-4">
-                                <span className="text-4xl">⚠️</span>
-                                <h3 className={`text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>
+                            <div className="flex items-center gap-3 mb-3">
+                                <span className="text-3xl">⚠️</span>
+                                <h3 className={`text-xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                                     Error Loading Lesson
                                 </h3>
                             </div>
-                            <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{error}</p>
+                            <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{error}</p>
                             <button 
                                 onClick={() => navigate(-1)}
-                                className="mt-6 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-300 hover:shadow-lg"
+                                className="mt-4 px-4 py-2 rounded-lg text-white font-semibold transition-all duration-300 hover:shadow-md text-sm"
                                 style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
                             >
                                 ← Go Back

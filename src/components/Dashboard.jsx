@@ -7,6 +7,7 @@ import Modules from "./Modules/Modules";
 import Loader from "../utils/Loader/Loader";
 import Footer from "./Footer/Footer";
 import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptCompilerButton";
+import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
 
 const Dashboard = () => {
     const { loading } = useUser();
@@ -25,8 +26,12 @@ const Dashboard = () => {
             <Header />
             
             <Section />
+
+            <JavascriptInterviewQuestionsButton />
+
             
             <Modules />
+
 
             <JavascriptCompilerButton />
 
