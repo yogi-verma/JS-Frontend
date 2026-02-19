@@ -73,11 +73,11 @@ const Modules = () => {
         <div className={`py-6 px-6`}>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-6">
-                    <h2 className={`text-4xl font-bold mb-2 ${colors.blueTextGradient}`}>
+                <div className="text-center mb-5">
+                    <h2 className={`text-3xl font-bold mb-2 ${colors.blueTextGradient}`}>
                         Available Modules
                     </h2>
-                    <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                         Explore our comprehensive learning modules
                     </p>
                 </div>
@@ -90,11 +90,11 @@ const Modules = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {modules.map((module, index) => (
                             <div
                                 key={module.id || index}
-                                className="rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 h-full"
+                                className="rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 h-full"
                                 style={{
                                     background: isDark 
                                         ? `linear-gradient(135deg, #1F2937, #111827)`
@@ -102,21 +102,21 @@ const Modules = () => {
                                     border: `1px solid ${isDark ? '#374151' : colors.blueLighter || '#E0E7FF'}`
                                 }}
                             >
-                                <div className="p-6 flex h-full flex-col">
+                                <div className="p-4 flex h-full flex-col">
                                     <div className="flex-1">
                                         {/* Module Title */}
-                                        <h3 className={`text-xl font-bold mb-3 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
+                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
                                             {module.title || module.name || `Module ${index + 1}`}
                                         </h3>
 
                                         {/* Module Description */}
-                                        <p className={`mb-4 line-clamp-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        <p className={`mb-3 line-clamp-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                             {module.description || 'No description available.'}
                                         </p>
 
                                         {/* Module Tags */}
                                         {module.tags && module.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mb-4">
+                                            <div className="flex flex-wrap gap-1.5 mb-3">
                                                 {module.tags.slice(0, 3).map((tag, tagIndex) => (
                                                     <span 
                                                         key={tagIndex}

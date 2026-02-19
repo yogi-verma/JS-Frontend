@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { HiMenuAlt3, HiX, HiUser, HiLogout, HiMoon, HiSun } from 'react-icons/hi';
+import { MdLogout, MdClose } from 'react-icons/md';
 import { useTheme } from '../WhiteDarkMode/useTheme';
 import ThemeToggle from '../WhiteDarkMode/ThemeToggle';
 import colors from '../color';
@@ -10,16 +11,28 @@ const HamburgerIcon = ({ isOpen, onClick, isDark }) => (
 	<button
 		type="button"
 		onClick={onClick}
-		className="group p-2 rounded-lg transition-all duration-300 hover:cursor-pointer hover:scale-105"
+		className="group relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105"
+		style={{
+			background: isDark ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.05)',
+			border: isDark ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(59, 130, 246, 0.15)',
+		}}
 		aria-label={isOpen ? 'Close menu' : 'Open menu'}
 		aria-expanded={isOpen}
 	>
 		<span className="sr-only">{isOpen ? 'Close menu' : 'Open menu'}</span>
-		<GiHamburgerMenu
-			className="w-6 h-6 transition-colors duration-300"
-			style={{ color: isDark ? colors.textLight : colors.textDark }}
-			aria-hidden
-		/>
+		{isOpen ? (
+			<HiX
+				className="w-6 h-6 transition-all duration-300"
+				style={{ color: isDark ? colors.blueLight : colors.blueMid }}
+				aria-hidden
+			/>
+		) : (
+			<HiMenuAlt3
+				className="w-6 h-6 transition-all duration-300"
+				style={{ color: isDark ? colors.blueLight : colors.blueMid }}
+				aria-hidden
+			/>
+		)}
 	</button>
 );
 
@@ -57,39 +70,67 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 				}`}
 				aria-hidden="true"
 				onClick={() => setIsOpen(false)}
-				style={{ background: 'rgba(0,0,0,0.4)' }}
+				style={{ 
+					background: isDark ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.4)',
+					backdropFilter: 'blur(4px)',
+				}}
 			/>
 
 			{/* Right drawer */}
 			<aside
-				className={`fixed top-0 right-0 z-50 h-full w-[280px] max-w-[85vw] shadow-xl transition-transform duration-300 ease-out flex flex-col ${
+				className={`fixed top-0 right-0 z-50 h-full w-[320px] max-w-[85vw] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
 					isOpen ? 'translate-x-0' : 'translate-x-full'
 				}`}
 				style={{
-					background: isDark ? '#1F2937' : colors.white,
-					borderLeft: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`
+					background: isDark 
+						? 'linear-gradient(180deg, #1F2937 0%, #111827 100%)' 
+						: 'linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%)',
+					borderLeft: isDark 
+						? '1px solid rgba(59, 130, 246, 0.2)' 
+						: '1px solid rgba(229, 231, 235, 0.8)',
+					boxShadow: isDark
+						? '-4px 0 24px rgba(0, 0, 0, 0.5)'
+						: '-4px 0 24px rgba(0, 0, 0, 0.1)',
 				}}
 				aria-label="Menu panel"
 			>
-				<div className="flex items-center justify-between p-4.5 border-b shrink-0" style={{ borderColor: isDark ? '#374151' : '#E5E7EB' }}>
-					<span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Menu</span>
+				{/* Header */}
+				<div 
+					className="flex items-center justify-between px-6 py-5 border-b shrink-0" 
+					style={{ 
+						borderColor: isDark ? 'rgba(59, 130, 246, 0.2)' : 'rgba(229, 231, 235, 0.8)',
+						background: isDark ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.02)',
+					}}
+				>
+					<span 
+						className="text-base font-bold tracking-tight" 
+						style={{ color: isDark ? colors.blueLight : colors.blueMid }}
+					>
+						Menu
+					</span>
 					<button
 						type="button"
 						onClick={() => setIsOpen(false)}
-						className={`p-2 rounded-lg transition-colors hover:opacity-80 focus:outline-none ${isDark ? 'text-gray-300 hover:text-gray-100' : 'text-gray-600 hover:text-gray-800'} hover:cursor-pointer hover:scale-105 transition-all duration-300`}
+						className="p-2 rounded-lg transition-all duration-300 hover:scale-110 focus:outline-none"
+						style={{
+							background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+							color: isDark ? '#9CA3AF' : '#6B7280',
+						}}
 						aria-label="Close menu"
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-						</svg>
+						<HiX className="h-5 w-5" />
 					</button>
 				</div>
 
-				<div className="flex-1 flex flex-col gap-4 p-4 overflow-auto">
+				{/* Content */}
+				<div className="flex-1 flex flex-col gap-5 p-6 overflow-auto">
 					{user ? (
 						<div 
-							className="flex items-center gap-3 p-3 rounded-xl hover:cursor-pointer hover:opacity-80 transition-opacity" 
-							style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }}
+							className="group flex items-center gap-4 p-4 rounded-xl hover:cursor-pointer transition-all duration-300" 
+							style={{ 
+								background: isDark ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.05)',
+								border: isDark ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(59, 130, 246, 0.15)',
+							}}
 							onClick={() => {
 								navigate('/dashboard/profile');
 								setIsOpen(false);
@@ -100,24 +141,41 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 									src={user.photo}
 									alt="Profile"
 									title={user.displayName}
-									className={`w-9 h-9 rounded-full border-2 object-cover ${isDark ? 'border-gray-600' : 'border-gray-300'}`}
+									className="w-12 h-12 rounded-full object-cover ring-2 transition-all duration-300 group-hover:ring-4"
+									style={{ 
+										ringColor: isDark ? colors.blueLight : colors.blueMid,
+									}}
 								/>
 							) : (
 								<div
-									className="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white border-2"
+									className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white ring-2 transition-all duration-300 group-hover:ring-4"
 									style={{
-										background: colors.blueLight,
-										borderColor: isDark ? '#374151' : '#E0E7FF'
+										background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})`,
+										ringColor: isDark ? colors.blueLight : colors.blueMid,
 									}}
 									title={user.displayName}
 								>
 									{getInitials(user.displayName)}
 								</div>
 							)}
-							<div className="min-w-0">
-								<p className={`text-sm font-bold truncate ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{user.displayName}</p>
-								<p className={`text-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{user.email}</p>
+							<div className="min-w-0 flex-1">
+								<p 
+									className="text-base font-bold truncate" 
+									style={{ color: isDark ? '#F9FAFB' : '#111827' }}
+								>
+									{user.displayName}
+								</p>
+								<p 
+									className="text-sm truncate" 
+									style={{ color: isDark ? '#9CA3AF' : '#6B7280' }}
+								>
+									{user.email}
+								</p>
 							</div>
+							<HiUser 
+								className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity"
+								style={{ color: isDark ? colors.blueLight : colors.blueMid }}
+							/>
 						</div>
 					) : (
 						onLoginClick && (
@@ -126,29 +184,70 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 									onLoginClick();
 									setIsOpen(false);
 								}}
-								className={`w-full py-2.5 px-4 hover:cursor-pointer rounded-lg font-medium transition ${isDark ? 'bg-blue-900 text-blue-100 hover:bg-blue-800' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
+								className="w-full py-3 px-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+								style={{
+									background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})`,
+									color: '#FFFFFF',
+									boxShadow: isDark
+										? '0 4px 12px rgba(59, 130, 246, 0.3)'
+										: '0 4px 12px rgba(59, 130, 246, 0.25)',
+								}}
 							>
 								Sign In / Log In
 							</button>
 						)
 					)}
 
-					<div className="flex items-center justify-between p-3 rounded-xl" style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }}>
-						<span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Theme</span>
+					{/* Theme Toggle Section */}
+					<div 
+						className="flex items-center justify-between p-4 rounded-xl" 
+						style={{ 
+							background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+							border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.08)',
+						}}
+					>
+						<div className="flex items-center gap-3">
+							{isDark ? (
+								<HiMoon className="w-5 h-5" style={{ color: colors.blueLight }} />
+							) : (
+								<HiSun className="w-5 h-5" style={{ color: colors.blueMid }} />
+							)}
+							<span 
+								className="text-sm font-semibold" 
+								style={{ color: isDark ? '#E5E7EB' : '#374151' }}
+							>
+								Theme
+							</span>
+						</div>
 						<ThemeToggle />
 					</div>
 				</div>
 
+				{/* Logout Button */}
 				{user && (
-					<div className="shrink-0 p-4 border-t" style={{ borderColor: isDark ? '#374151' : '#E5E7EB' }}>
+					<div 
+						className="shrink-0 px-6 py-5 border-t" 
+						style={{ 
+							borderColor: isDark ? 'rgba(59, 130, 246, 0.2)' : 'rgba(229, 231, 235, 0.8)',
+							background: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.02)',
+						}}
+					>
 						<button
 							type="button"
 							onClick={() => {
 								setIsOpen(false);
 								setShowLogoutModal(true);
 							}}
-							className={`w-full py-2.5 px-4 rounded-lg font-medium transition hover:cursor-pointer ${isDark ? 'bg-red-900 text-red-100 hover:bg-red-800' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}
+							className="group w-full py-3 px-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+							style={{
+								background: isDark 
+									? 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15))' 
+									: 'linear-gradient(135deg, rgba(254, 226, 226, 1), rgba(254, 202, 202, 1))',
+								color: isDark ? '#FCA5A5' : '#DC2626',
+								border: isDark ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(239, 68, 68, 0.2)',
+							}}
 						>
+							<MdLogout className="w-5 h-5 transition-transform group-hover:translate-x-[-2px]" />
 							Logout
 						</button>
 					</div>
@@ -157,48 +256,127 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 
 			{/* Logout confirmation modal */}
 			<div
-				className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-200 ${
+				className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 ${
 					showLogoutModal ? 'opacity-100' : 'opacity-0 pointer-events-none'
 				}`}
 				aria-hidden={!showLogoutModal}
 			>
+				{/* Backdrop */}
 				<div
 					className="absolute inset-0 backdrop-blur-md"
 					style={{
-						background: `${colors.blueDark}E6`
+						background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.5)',
 					}}
 					onClick={() => setShowLogoutModal(false)}
 					aria-hidden="true"
 				/>
+				
+				{/* Modal */}
 				<div
 					role="dialog"
 					aria-modal="true"
 					aria-labelledby="logout-modal-title"
-					className="relative w-full max-w-sm rounded-xl shadow-xl p-6 bg-white border border-gray-200"
+					className={`relative w-full max-w-md rounded-2xl shadow-2xl p-8 transform transition-all duration-300 ${
+						showLogoutModal ? 'scale-100' : 'scale-95'
+					}`}
+					style={{
+						background: isDark 
+							? 'linear-gradient(135deg, #1F2937 0%, #111827 100%)' 
+							: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+						border: isDark 
+							? '1px solid rgba(59, 130, 246, 0.2)' 
+							: '1px solid rgba(229, 231, 235, 0.8)',
+					}}
 					onClick={(e) => e.stopPropagation()}
 				>
-					<p id="logout-modal-title" className="text-center font-medium text-gray-800">
-						Do you really want to logout?
+					{/* Icon */}
+					{/* <div className="flex justify-center mb-6">
+						<div 
+							className="p-4 rounded-full"
+							style={{
+								background: isDark 
+									? 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15))' 
+									: 'linear-gradient(135deg, rgba(254, 226, 226, 1), rgba(254, 202, 202, 1))',
+							}}
+						>
+							<HiLogout 
+								className="w-10 h-10" 
+								style={{ color: isDark ? '#FCA5A5' : '#DC2626' }}
+							/>
+						</div>
+					</div> */}
+
+					{/* Title */}
+					<h3 
+						id="logout-modal-title" 
+						className="text-center text-2xl font-bold mb-3"
+						style={{ color: isDark ? '#F9FAFB' : '#111827' }}
+					>
+						Confirm Logout
+					</h3>
+					
+					{/* Message */}
+					<p 
+						className="text-center text-base mb-8"
+						style={{ color: isDark ? '#9CA3AF' : '#6B7280' }}
+					>
+						Are you sure you want to logout from your account?
 					</p>
-					<div className="mt-6 flex gap-3 justify-center">
+					
+					{/* Buttons */}
+					<div className="flex gap-3 justify-center">
 						<button
 							type="button"
 							onClick={() => {
 								setShowLogoutModal(false);
 								logout();
 							}}
-							className={`px-5 py-2.5 rounded-lg font-medium hover:cursor-pointer transition ${isDark ? 'bg-red-900 text-red-100 hover:bg-red-800' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}
+							className="group flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+							style={{
+								background: isDark 
+									? 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2))' 
+									: 'linear-gradient(135deg, #EF4444, #DC2626)',
+								color: isDark ? '#FCA5A5' : '#FFFFFF',
+								border: isDark ? '1px solid rgba(239, 68, 68, 0.4)' : 'none',
+								boxShadow: isDark 
+									? 'none' 
+									: '0 4px 12px rgba(239, 68, 68, 0.25)',
+							}}
 						>
-							Yes
+							<MdLogout className="w-5 h-5" />
+							Logout
 						</button>
 						<button
 							type="button"
 							onClick={() => setShowLogoutModal(false)}
-							className={`px-5 py-2.5 rounded-lg font-medium transition hover:cursor-pointer ${isDark ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+							className="flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+							style={{
+								background: isDark 
+									? 'rgba(255, 255, 255, 0.08)' 
+									: 'rgba(0, 0, 0, 0.05)',
+								color: isDark ? '#E5E7EB' : '#374151',
+								border: isDark 
+									? '1px solid rgba(255, 255, 255, 0.15)' 
+									: '1px solid rgba(0, 0, 0, 0.1)',
+							}}
 						>
-							No
+							Cancel
 						</button>
 					</div>
+
+					{/* Close button */}
+					<button
+						type="button"
+						onClick={() => setShowLogoutModal(false)}
+						className="absolute top-4 right-4 p-2 rounded-lg transition-all duration-300 hover:scale-110"
+						style={{
+							background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+							color: isDark ? '#9CA3AF' : '#6B7280',
+						}}
+						aria-label="Close modal"
+					>
+						<MdClose className="w-5 h-5" />
+					</button>
 				</div>
 			</div>
 		</>

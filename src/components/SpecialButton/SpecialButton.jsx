@@ -36,7 +36,7 @@ const SpecialButton = () => {
         <div className="flex flex-col gap-4 px-6 py-3 sm:px-8 sm:py-8 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
             <h2
-              className="text-xl sm:text-2xl font-bold"
+              className="text-lg sm:text-xl font-bold"
               style={{ color: textColor }}
             >
               Zero to Full-Stack Engineer — Complete Free Program{" "}

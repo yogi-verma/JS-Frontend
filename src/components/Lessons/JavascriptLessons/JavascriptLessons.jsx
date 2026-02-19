@@ -104,7 +104,7 @@ const JavascriptLessons = () => {
                         }}
                     >
                         <div className="flex items-center gap-4 mb-4">
-                            <span className="text-4xl">⚠️</span>
+                            <span className="text-3xl">⚠️</span>
                             <h3 className={`text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                                 Error Loading Lessons
                             </h3>
@@ -133,7 +133,7 @@ const JavascriptLessons = () => {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-3 mb-4">
-                        <h1 className={`text-4xl sm:text-5xl font-extrabold ${colors.blueTextGradient}`}>
+                        <h1 className={`text-3xl sm:text-4xl font-extrabold ${colors.blueTextGradient}`}>
                             JavaScript Lessons
                         </h1>
                     </div>
@@ -183,7 +183,7 @@ const JavascriptLessons = () => {
                             return (
                                 <div
                                     key={lesson._id || index}
-                                    className={`group relative rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col ${
+                                    className={`group relative rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-2 flex flex-col ${
                                         isDark ? 'hover:shadow-blue-500/20' : 'hover:shadow-blue-500/30'
                                     }`}
                                     style={{
@@ -199,12 +199,12 @@ const JavascriptLessons = () => {
                                         style={{ background: `linear-gradient(90deg, ${colors.blueLight}, ${colors.blueMid})` }}
                                     />
                                     
-                                    <div className="p-5 flex flex-col flex-grow">
+                                    <div className="p-4 flex flex-col grow">
                                         {/* Header with Number and Badges */}
-                                        <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-start justify-between mb-3">
                                             {/* Lesson Number Badge */}
                                             <div 
-                                                className="w-6 h-6 rounded-lg flex items-center justify-center text-sm font-bold text-white shadow-md"
+                                                className="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold text-white shadow-md"
                                                 style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
                                             >
                                                 {lesson.order || index + 1}
@@ -214,13 +214,13 @@ const JavascriptLessons = () => {
                                         </div>
 
                                         {/* Badges */}
-                                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                        <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                                                 isDark ? `${typeColor.darkBg} ${typeColor.darkText}` : `${typeColor.bg} ${typeColor.text}`
                                             }`}>
                                                 {lesson.type || 'theory'}
                                             </span>
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${
                                                 isDark ? `${difficultyColor.darkBg} ${difficultyColor.darkText}` : `${difficultyColor.bg} ${difficultyColor.text}`
                                             }`}>
                                                 {lesson.difficulty || 'beginner'}
@@ -228,21 +228,21 @@ const JavascriptLessons = () => {
                                         </div>
 
                                         {/* Title */}
-                                        <h3 className={`text-lg font-bold mb-2 line-clamp-2 transition-colors duration-300 ${
+                                        <h3 className={`text-base font-bold mb-2 line-clamp-2 transition-colors duration-300 ${
                                             isDark ? 'text-white group-hover:text-blue-400' : 'text-gray-800 group-hover:text-blue-600'
                                         }`}>
                                             {lesson.title}
                                         </h3>
 
                                         {/* Description */}
-                                        <p className={`text-sm mb-4 line-clamp-3 flex-grow ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        <p className={`text-xs mb-3 line-clamp-3 grow ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                             {lesson.description}
                                         </p>
 
                                         {/* Start Button */}
                                         <button 
                                             onClick={() => navigate(`/lesson/${lesson._id}`)}
-                                            className="w-full py-2.5 hover:cursor-pointer rounded-xl text-white font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:opacity-90 flex items-center justify-center gap-2"
+                                            className="w-full py-2 hover:cursor-pointer rounded-lg text-white font-semibold text-xs transition-all duration-300 hover:shadow-md hover:opacity-90 flex items-center justify-center gap-1.5"
                                             style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})` }}
                                         >
                                             <span>Start Lesson</span>
