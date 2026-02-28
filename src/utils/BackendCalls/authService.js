@@ -322,6 +322,126 @@ export const getLessonById = async (lessonId) => {
 };
 
 /**
+ * Fetch all interview questions (with optional filters)
+ * @param {Object} params - Query params: difficulty, category, page, limit
+ * @returns {Promise<Object>} Object containing questions array and pagination
+ */
+export const getInterviewQuestions = async (params = {}) => {
+    try {
+        const query = new URLSearchParams(params).toString();
+        const res = await fetch(`${BACKEND_URL}/api/interview-questions${query ? `?${query}` : ''}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch interview questions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching interview questions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch interview questions by difficulty
+ * @param {string} difficulty - Easy, Medium, or Hard
+ * @returns {Promise<Object>} Object containing questions array
+ */
+export const getInterviewQuestionsByDifficulty = async (difficulty) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/interview-questions/difficulty/${difficulty}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch questions by difficulty: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching questions by difficulty:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch interview questions stats
+ * @returns {Promise<Object>} Stats object with totals by difficulty and category
+ */
+export const getInterviewQuestionsStats = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/interview-questions/stats`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch interview questions stats: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching interview questions stats:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get the logged-in user's interview question completion progress
+ * @returns {Promise<Object>} Progress map { questionId: { isCompleted, completedAt } }
+ */
+export const getUserInterviewProgress = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/interview-progress`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: {}, completedCount: 0 };
+            throw new Error(`Failed to fetch interview progress: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching interview progress:', err);
+        throw err;
+    }
+};
+
+/**
+ * Toggle completion status for a specific interview question
+ * @param {string} questionId - The ID of the interview question
+ * @returns {Promise<Object>} Updated completion status
+ */
+export const toggleQuestionCompletion = async (questionId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/interview-progress/${questionId}/toggle`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to toggle completion: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error toggling question completion:', err);
+        throw err;
+    }
+};
+
+/**
  * Update user website
  * @param {string} website - The new website URL
  * @returns {Promise<Object>} Updated user object
