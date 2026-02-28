@@ -121,7 +121,7 @@ const UserProfile = () => {
         {/* Personal Information Section */}
         <div className="mb-4">
           <h2
-            className={`text-sm font-semibold mb-3 ${isDark ? "text-gray-200" : "text-gray-800"}`}
+            className="text-xl font-bold mb-4 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
           >
             Personal Information
           </h2>
@@ -137,7 +137,7 @@ const UserProfile = () => {
         {/* Professional Information Section */}
         <div className="mb-4">
           <h2
-            className={`text-sm font-semibold mb-3 ${isDark ? "text-gray-200" : "text-gray-800"}`}
+            className="text-xl font-bold mb-4 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
           >
             Professional Information
           </h2>
@@ -150,7 +150,7 @@ const UserProfile = () => {
         {/* Social Links Section */}
         <div className="mb-4">
           <h2
-            className={`text-sm font-semibold mb-3 ${isDark ? "text-gray-200" : "text-gray-800"}`}
+            className="text-xl font-bold mb-4 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
           >
             Online Presence
           </h2>

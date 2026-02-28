@@ -25,8 +25,8 @@ const Header = () => {
 			}}
 			className={`sticky top-0 z-50 text-gray-800 border-b shadow-sm ${isDark ? 'text-gray-100' : ''}`}
 		>
-			<div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-				<div className="flex items-center">
+			<div className="px-4 py-4 flex items-center justify-between">
+				<div className="flex items-center gap-2">
 					<img
 						src={logo}
 						alt="Logo"
@@ -44,7 +44,7 @@ const Header = () => {
 				</div>
 
 				{/* Hamburger — visible on small screens; opens drawer with user photo + theme */}
-				<div>
+				<div className="ml-auto">
 					<Hamburger
 						user={user}
 						getInitials={getInitials}
