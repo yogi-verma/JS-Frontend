@@ -78,14 +78,14 @@ const Modules = () => {
                         Available Modules
                     </h2>
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Explore our comprehensive learning modules
+                        Explore our comprehensive learning paths
                     </p>
                 </div>
 
                 {/* Modules Grid */}
                 {modules.length === 0 ? (
-                    <div className="text-center py-12">
-                        <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <div className={`text-center py-12 rounded-lg border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                        <p className={`text-base font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                             No modules available at the moment.
                         </p>
                     </div>
@@ -94,53 +94,52 @@ const Modules = () => {
                         {modules.map((module, index) => (
                             <div
                                 key={module.id || index}
-                                className="rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 h-full"
-                                style={{
-                                    background: isDark 
-                                        ? `linear-gradient(135deg, #1F2937, #111827)`
-                                        : `linear-gradient(135deg, ${colors.blueLight}10, ${colors.blueMid}10)`,
-                                    border: `1px solid ${isDark ? '#374151' : colors.blueLighter || '#E0E7FF'}`
-                                }}
+                                onClick={() => navigate(`/lessons/module/${module._id}`)}
+                                className={`group rounded-lg border transition-all duration-200 hover:shadow-md cursor-pointer ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
+                                        : 'bg-white border-gray-200 hover:border-gray-300'
+                                }`}
                             >
-                                <div className="p-4 flex h-full flex-col">
-                                    <div className="flex-1">
-                                        {/* Module Title */}
-                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
-                                            {module.title || module.name || `Module ${index + 1}`}
-                                        </h3>
+                                <div className="p-4">
+                                    {/* Module Title */}
+                                    <h3 className={`text-base font-semibold mb-2 ${
+                                        isDark ? 'text-white group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'
+                                    } transition-colors`}>
+                                        {module.title || module.name || `Module ${index + 1}`}
+                                    </h3>
 
-                                        {/* Module Description */}
-                                        <p className={`mb-3 line-clamp-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            {module.description || 'No description available.'}
-                                        </p>
+                                    {/* Module Description */}
+                                    <p className={`mb-3 line-clamp-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        {module.description || 'No description available.'}
+                                    </p>
 
-                                        {/* Module Tags */}
-                                        {module.tags && module.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-1.5 mb-3">
-                                                {module.tags.slice(0, 3).map((tag, tagIndex) => (
-                                                    <span 
-                                                        key={tagIndex}
-                                                        className={`px-2 py-1 text-xs rounded-full ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
-                                                    >
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                                {module.tags.length > 3 && (
-                                                    <span className={`px-2 py-1 text-xs rounded-full ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
-                                                        +{module.tags.length - 3}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
+                                    {/* Module Tags */}
+                                    {module.tags && module.tags.length > 0 && (
+                                        <div className="flex flex-wrap gap-1.5 mb-3">
+                                            {module.tags.slice(0, 3).map((tag, tagIndex) => (
+                                                <span 
+                                                    key={tagIndex}
+                                                    className={`px-2 py-0.5 text-xs rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                            {module.tags.length > 3 && (
+                                                <span className={`px-2 py-0.5 text-xs rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+                                                    +{module.tags.length - 3}
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
 
                                     {/* Module Metadata */}
-                                    <div className="flex items-center justify-between text-sm mt-4">
-                                        <div className="flex items-center gap-3">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                module.difficulty === 'beginner' ? 'bg-green-100 text-green-700' :
-                                                module.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                                                module.difficulty === 'advanced' ? 'bg-red-100 text-red-700' :
+                                    <div className={`flex items-center justify-between text-xs pt-3 border-t ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`px-2 py-1 rounded font-medium capitalize ${
+                                                module.difficulty === 'beginner' ? isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700' :
+                                                module.difficulty === 'intermediate' ? isDark ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-100 text-yellow-700' :
+                                                module.difficulty === 'advanced' ? isDark ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700' :
                                                 isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
                                             }`}>
                                                 {module.difficulty || 'beginner'}
@@ -149,15 +148,9 @@ const Modules = () => {
                                                 {module.estimatedDuration ? `${module.estimatedDuration}h` : 'Self-paced'}
                                             </span>
                                         </div>
-                                        <button 
-                                            onClick={() => navigate(`/lessons/module/${module._id}`)}
-                                            className="px-4 py-2 rounded-lg hover:cursor-pointer text-white font-medium transition-all duration-300 hover:shadow-md"
-                                            style={{
-                                                background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})`
-                                            }}
-                                        >
-                                            Start
-                                        </button>
+                                        <svg className={`w-5 h-5 transition-transform group-hover:translate-x-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
                                     </div>
                                 </div>
                             </div>

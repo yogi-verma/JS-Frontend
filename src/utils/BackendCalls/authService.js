@@ -1,5 +1,5 @@
 // Backend API calls for authentication
-const BACKEND_URL = 'https://js-backend-olive.vercel.app'; // Change to your backend URL in production
+const BACKEND_URL = 'http://localhost:5000'; // Change to your backend URL in production
 
 // Backend URL = https://js-backend-olive.vercel.app/
 
