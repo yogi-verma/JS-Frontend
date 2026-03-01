@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import colors from "../../../utils/color";
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+import {
+  getInterviewQuestionsStats,
+  getUserInterviewProgress,
+  getFrontendQuestionsStats,
+  getUserFrontendProgress,
+} from "../../../utils/BackendCalls/authService";
 
 // Circular progress ring component
 const CircularProgress = ({ percentage, size = 120, strokeWidth = 10, isDark, color }) => {
@@ -143,20 +147,12 @@ const ProgressAnalytics = ({ isDark }) => {
       setLoading(true);
       setError(null);
 
-      const [interviewStatsRes, interviewProgressRes, frontendStatsRes, frontendProgressRes] =
-        await Promise.all([
-          fetch(`${BACKEND_URL}/api/interview-questions/stats`, { credentials: "include" }),
-          fetch(`${BACKEND_URL}/api/interview-progress`, { credentials: "include" }),
-          fetch(`${BACKEND_URL}/api/frontend-questions/stats`, { credentials: "include" }),
-          fetch(`${BACKEND_URL}/api/frontend-progress`, { credentials: "include" }),
-        ]);
-
       const [interviewStatsData, interviewProgressData, frontendStatsData, frontendProgressData] =
         await Promise.all([
-          interviewStatsRes.json(),
-          interviewProgressRes.json(),
-          frontendStatsRes.json(),
-          frontendProgressRes.json(),
+          getInterviewQuestionsStats(),
+          getUserInterviewProgress(),
+          getFrontendQuestionsStats(),
+          getUserFrontendProgress(),
         ]);
 
       // Interview stats
