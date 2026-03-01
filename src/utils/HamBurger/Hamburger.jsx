@@ -11,7 +11,7 @@ const HamburgerIcon = ({ isOpen, onClick, isDark }) => (
 	<button
 		type="button"
 		onClick={onClick}
-		className="group relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105"
+		className="group relative p-1.5 rounded-lg transition-all duration-300 hover:scale-105"
 		style={{
 			background: isDark ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.05)',
 			border: isDark ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(59, 130, 246, 0.15)',
@@ -22,13 +22,13 @@ const HamburgerIcon = ({ isOpen, onClick, isDark }) => (
 		<span className="sr-only">{isOpen ? 'Close menu' : 'Open menu'}</span>
 		{isOpen ? (
 			<HiX
-				className="w-6 h-6 transition-all duration-300"
+				className="w-5 h-5 transition-all duration-300"
 				style={{ color: isDark ? colors.blueLight : colors.blueMid }}
 				aria-hidden
 			/>
 		) : (
 			<HiMenuAlt3
-				className="w-6 h-6 transition-all duration-300"
+				className="w-5 h-5 transition-all duration-300"
 				style={{ color: isDark ? colors.blueLight : colors.blueMid }}
 				aria-hidden
 			/>
@@ -289,22 +289,6 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 					}}
 					onClick={(e) => e.stopPropagation()}
 				>
-					{/* Icon */}
-					{/* <div className="flex justify-center mb-6">
-						<div 
-							className="p-4 rounded-full"
-							style={{
-								background: isDark 
-									? 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15))' 
-									: 'linear-gradient(135deg, rgba(254, 226, 226, 1), rgba(254, 202, 202, 1))',
-							}}
-						>
-							<HiLogout 
-								className="w-10 h-10" 
-								style={{ color: isDark ? '#FCA5A5' : '#DC2626' }}
-							/>
-						</div>
-					</div> */}
 
 					{/* Title */}
 					<h3 
