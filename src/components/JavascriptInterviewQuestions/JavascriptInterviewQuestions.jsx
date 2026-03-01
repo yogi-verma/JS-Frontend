@@ -18,6 +18,7 @@ const JavascriptInterviewQuestions = () => {
   const [completedMap, setCompletedMap] = useState({});
   const [togglingId, setTogglingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedCodeIds, setExpandedCodeIds] = useState({});
   const questionsPerPage = 10;
   const contentRefs = useRef({});
 
@@ -137,6 +138,10 @@ const JavascriptInterviewQuestions = () => {
 
   const toggleExpand = (id) => {
     setExpandedId(prev => prev === id ? null : id);
+  };
+
+  const toggleCodeExpand = (id) => {
+    setExpandedCodeIds(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   if (loading) {
@@ -356,7 +361,11 @@ const JavascriptInterviewQuestions = () => {
                       ref={el => contentRefs.current[q._id] = el}
                       className="overflow-hidden transition-all duration-300"
                       style={{
-                        maxHeight: isExpanded ? `${(contentRefs.current[q._id]?.scrollHeight || 0) + 100}px` : '0px',
+                        maxHeight: isExpanded
+                          ? expandedCodeIds[q._id]
+                            ? '10000px'
+                            : `${(contentRefs.current[q._id]?.scrollHeight || 0) + 100}px`
+                          : '0px',
                         opacity: isExpanded ? 1 : 0,
                       }}
                     >
@@ -371,25 +380,44 @@ const JavascriptInterviewQuestions = () => {
                             </div>
                             <div>
                               <p className={`text-[10px] font-semibold uppercase tracking-wider mb-1 ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>Answer</p>
-                              <p className={`text-[13px] leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                {q.answer}
-                              </p>
+                              <div className={`text-[13px] leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                {q.answer.split('\n').map((line, i) => (
+                                  <p key={i} className={i > 0 ? 'mt-1.5' : ''}>{line}</p>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
 
                         {/* Coding Examples */}
                         {q.codingExamples && q.codingExamples.length > 0 && (
-                          <div className="mt-4 space-y-3">
-                            <div className="flex items-center gap-2">
-                              <svg className={`w-4 h-4 ${isDark ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                          <div className="mt-4">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); toggleCodeExpand(q._id); }}
+                              className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                                isDark
+                                  ? 'bg-gray-700/40 hover:bg-gray-700/70 text-gray-300'
+                                  : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <svg className={`w-4 h-4 ${isDark ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                                </svg>
+                                <span>Code Examples ({q.codingExamples.length})</span>
+                              </div>
+                              <svg
+                                className={`w-4 h-4 transition-transform duration-300 ${expandedCodeIds[q._id] ? 'rotate-180' : ''}`}
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                               </svg>
-                              <span className={`text-xs font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                Code Examples ({q.codingExamples.length})
-                              </span>
-                            </div>
+                            </button>
 
+                            <div
+                              className={`overflow-hidden transition-all duration-300 ${expandedCodeIds[q._id] ? 'max-h-[5000px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
+                            >
+                            <div className="space-y-3">
                             {q.codingExamples.map((example, exIdx) => (
                               <div key={exIdx} className={`rounded-lg border overflow-hidden ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
                                 {/* Example Title Bar */}
@@ -415,11 +443,15 @@ const JavascriptInterviewQuestions = () => {
                                       : 'bg-gray-50 border-gray-200 text-gray-600'
                                   }`}>
                                     <span className={`font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Explanation: </span>
-                                    {example.explanation}
+                                    {example.explanation.split('\n').map((line, i) => (
+                                      <p key={i} className={i > 0 ? 'mt-1' : 'inline'}>{line}</p>
+                                    ))}
                                   </div>
                                 )}
                               </div>
                             ))}
+                            </div>
+                            </div>
                           </div>
                         )}
 

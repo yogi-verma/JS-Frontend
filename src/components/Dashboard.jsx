@@ -8,6 +8,7 @@ import Loader from "../utils/Loader/Loader";
 import Footer from "./Footer/Footer";
 import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptCompilerButton";
 import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
+import FrontendQuestionBundleButton from "./FrontendQuestionsBundle/FrontendQuestionBundleButton";
 
 const Dashboard = () => {
     const { loading } = useUser();
@@ -36,6 +37,8 @@ const Dashboard = () => {
             <JavascriptCompilerButton />
 
             <Reason />
+
+            <FrontendQuestionBundleButton />
 
             <Footer />
 

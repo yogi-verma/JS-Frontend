@@ -10,6 +10,8 @@ import JavascriptLessonsByName from './components/Lessons/JavascriptLessons/Java
 import JavascriptCompiler from './utils/JavascriptCompiler/JavascriptCompiler';
 import UserProfile from './components/UserProfile/UserProfile';
 import JavascriptInterviewQuestions from './components/JavascriptInterviewQuestions/JavascriptInterviewQuestions';
+import FrontendQuestionBundleButton from './components/FrontendQuestionsBundle/FrontendQuestionBundleButton';
+import FrontendQuestionBundle from './components/FrontendQuestionsBundle/FrontendQuestionBundle';
 
 function App() {
     return (
@@ -64,6 +66,15 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <JavascriptInterviewQuestions />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        
+                        <Route 
+                            path="/dashboard/frontend-interview-questions" 
+                            element={
+                                <ProtectedRoute>
+                                    <FrontendQuestionBundle />
                                 </ProtectedRoute>
                             } 
                         />

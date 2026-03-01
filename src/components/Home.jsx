@@ -9,6 +9,7 @@ import Footer from "./Footer/Footer";
 import Reason from "./Reason/Reason";
 import SpecialButton from "./SpecialButton/SpecialButton";
 import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
+import FrontendQuestionBundleButton from "./FrontendQuestionsBundle/FrontendQuestionBundleButton";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -34,6 +35,8 @@ const Home = () => {
             <JavascriptInterviewQuestionsButton onLearnMoreClick={initializeGoogleLogin} />
 
             <Reason />
+
+            <FrontendQuestionBundleButton />
 
             <SpecialButton />
 
