@@ -23,14 +23,14 @@ const Header = () => {
 				background: isDark ? '#1F2937' : colors.white,
 				borderColor: isDark ? '#374151' : '#E0E7FF'
 			}}
-			className={`sticky top-0 z-50 text-gray-800 border-b shadow-sm ${isDark ? 'text-gray-100' : ''}`}
+			className={`sticky top-0 z-50 w-full max-w-full overflow-hidden text-gray-800 border-b shadow-sm ${isDark ? 'text-gray-100' : ''}`}
 		>
-			<div className="px-4 py-4 flex items-center justify-between">
+			<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<img
 						src={logo}
 						alt="Logo"
-						className="object-contain w-10 h-10"
+						className="object-contain w-8 h-8"
 					/>
 					<div>
 						<h1

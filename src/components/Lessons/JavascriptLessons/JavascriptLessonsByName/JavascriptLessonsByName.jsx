@@ -260,18 +260,19 @@ const JavascriptLessonsByName = () => {
 
             <div className="flex">
                 {/* Sidebar - Left */}
-                <div className={`fixed lg:sticky top-0 left-0 h-screen lg:h-[calc(100vh-64px)] w-72 ${isDark ? 'bg-gray-800 border-r border-gray-700' : 'bg-gray-50 border-r border-gray-200'} overflow-y-auto transition-transform duration-300 z-30 ${
+                <div className={`fixed lg:sticky top-0 left-0 h-screen w-72 ${isDark ? 'bg-gray-800 border-r border-gray-700' : 'bg-gray-50 border-r border-gray-200'} overflow-y-auto transition-transform duration-300 z-50 lg:z-30 ${
                     isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
                 }`}>
                     <div className="p-4">
-                        {/* Phase Header - Desktop only */}
-                        <div className="hidden lg:block mb-4">
-                            <div className="flex items-center justify-between mb-3">
-                                <h1 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {/* Phase Header */}
+                        <div className="mb-4">
+                            {/* Mobile close button */}
+                            <div className="flex lg:hidden items-center justify-between mb-3">
+                                <h1 className={`text-base font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                     {lesson.phase}
                                 </h1>
                                 <button 
-                                    onClick={() => navigate(-1)}
+                                    onClick={() => setIsSidebarOpen(false)}
                                     className={`p-1.5 rounded-lg ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,16 +280,30 @@ const JavascriptLessonsByName = () => {
                                     </svg>
                                 </button>
                             </div>
+                            {/* Desktop close button */}
+                            <div className="hidden lg:flex items-center justify-between mb-3">
+                                <h1 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    {lesson.phase}
+                                </h1>
+                                
+                            </div>
                             
-                            <div className="flex items-center gap-2 mb-3">
+                            <div className="flex items-center justify-between mb-3">
+                                <button 
+                                    onClick={() => navigate(-1)}
+                                    className={`inline-flex items-center gap-1 py-1 rounded-lg text-xs font-medium ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                                >
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Back
+                                </button>
                                 <span className={`px-2 py-1 rounded text-xs font-medium capitalize ${
                                     isDark ? `${difficultyColor.darkBg} ${difficultyColor.darkText}` : `${difficultyColor.bg} ${difficultyColor.text}`
                                 }`}>
                                     {lesson.difficulty}
                                 </span>
-                                <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    {lesson.estimatedDuration} min
-                                </span>
+                                
                             </div>
                             
                             <div className={`h-px ${isDark ? 'bg-gray-700' : 'bg-gray-200'} mb-4`}></div>
@@ -339,7 +354,7 @@ const JavascriptLessonsByName = () => {
                 {/* Overlay for mobile sidebar */}
                 {isSidebarOpen && (
                     <div 
-                        className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+                        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
                         onClick={() => setIsSidebarOpen(false)}
                     />
                 )}
