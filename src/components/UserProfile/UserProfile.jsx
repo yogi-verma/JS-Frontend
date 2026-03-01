@@ -16,6 +16,7 @@ import DisplayCompany from "./DisplayCompany/DisplayCompany";
 import DisplayWebsite from "./DisplayWebsite/DisplayWebsite";
 import DisplaySocialLinks from "./DisplaySocialLinks/DisplaySocialLinks";
 import DisplayAccountInformation from "./DisplayAccountInformation/DisplayAccountInformation";
+import ProgressAnalytics from "./ProgressAnalytics/ProgressAnalytics";
 
 const UserProfile = () => {
   const { user } = useUser();
@@ -117,6 +118,9 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+
+        {/* Progress Analytics Section */}
+        <ProgressAnalytics isDark={isDark} />
 
         {/* Personal Information Section */}
         <div className="mb-4">

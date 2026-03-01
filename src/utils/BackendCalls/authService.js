@@ -552,3 +552,150 @@ export const updateTitle = async (title) => {
         throw err;
     }
 };
+
+// ═══════════════════════════════════════════════════
+// Frontend Questions API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Fetch all frontend questions (with optional filters)
+ * @param {Object} params - Query params: category, page, limit
+ * @returns {Promise<Object>} Object containing questions array and pagination
+ */
+export const getFrontendQuestions = async (params = {}) => {
+    try {
+        const query = new URLSearchParams(params).toString();
+        const res = await fetch(`${BACKEND_URL}/api/frontend-questions${query ? `?${query}` : ''}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch frontend questions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching frontend questions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch frontend questions by category
+ * @param {string} category - The category name
+ * @returns {Promise<Object>} Object containing questions array
+ */
+export const getFrontendQuestionsByCategory = async (category) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/frontend-questions/category/${encodeURIComponent(category)}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch questions by category: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching questions by category:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch frontend questions stats
+ * @returns {Promise<Object>} Stats object with totals by category
+ */
+export const getFrontendQuestionsStats = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/frontend-questions/stats`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch frontend questions stats: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching frontend questions stats:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch all seeded frontend question categories with counts
+ * @returns {Promise<Object>} Array of { category, count }
+ */
+/**
+ * Get the logged-in user's frontend question completion progress
+ * @returns {Promise<Object>} Progress map { questionId: { isCompleted, completedAt } }
+ */
+export const getUserFrontendProgress = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/frontend-progress`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: {}, completedCount: 0 };
+            throw new Error(`Failed to fetch frontend progress: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching frontend progress:', err);
+        throw err;
+    }
+};
+
+/**
+ * Toggle completion status for a specific frontend question
+ * @param {string} questionId - The ID of the frontend question
+ * @returns {Promise<Object>} Updated completion status
+ */
+export const toggleFrontendQuestionCompletion = async (questionId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/frontend-progress/${questionId}/toggle`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to toggle frontend completion: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error toggling frontend question completion:', err);
+        throw err;
+    }
+};
+
+export const getFrontendCategories = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/frontend-questions/categories`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch frontend categories: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching frontend categories:', err);
+        throw err;
+    }
+};
