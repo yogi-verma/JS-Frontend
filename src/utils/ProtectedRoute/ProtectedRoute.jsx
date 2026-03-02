@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "../UserContext/UserContext";
-import Loader from "../Loader/Loader";
-import { useTheme } from "../WhiteDarkMode/useTheme";
+import SkeletonLoader from "../SkeletonLoader/SkeletonLoader";
 
 /**
  * ProtectedRoute component that wraps routes requiring authentication
@@ -10,16 +9,11 @@ import { useTheme } from "../WhiteDarkMode/useTheme";
  */
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, loading } = useUser();
-    const { isDark } = useTheme();
     const location = useLocation();
 
     // Loading state while checking authentication
     if (loading) {
-        return (
-            <div className={`h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <Loader />
-            </div>
-        );
+        return <SkeletonLoader variant="auth" />;
     }
 
     // Not authenticated - redirect to home

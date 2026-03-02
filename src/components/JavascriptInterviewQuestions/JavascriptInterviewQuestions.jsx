@@ -4,7 +4,7 @@ import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import { getInterviewQuestions, getUserInterviewProgress, toggleQuestionCompletion } from "../../utils/BackendCalls/authService";
 import { useUser } from "../../utils/UserContext/UserContext";
-import Loader from "../../utils/Loader/Loader";
+import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 
 const JavascriptInterviewQuestions = () => {
   const { isDark } = useTheme();
@@ -145,11 +145,7 @@ const JavascriptInterviewQuestions = () => {
   };
 
   if (loading) {
-    return (
-      <div className={`min-h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-        <Loader />
-      </div>
-    );
+    return <SkeletonLoader variant="questions-list" />;
   }
 
   if (error) {

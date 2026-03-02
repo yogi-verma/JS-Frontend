@@ -4,7 +4,7 @@ import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import { getFrontendQuestionsStats, getFrontendQuestionsByCategory, getUserFrontendProgress, toggleFrontendQuestionCompletion } from "../../utils/BackendCalls/authService";
 import { useUser } from "../../utils/UserContext/UserContext";
-import Loader from "../../utils/Loader/Loader";
+import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 
 const FrontendQuestionBundle = () => {
   const { isDark } = useTheme();
@@ -189,11 +189,7 @@ const FrontendQuestionBundle = () => {
   const getColor = (cat) => categoryColors[cat] || { bg: 'bg-blue-500', text: 'text-blue-500', light: 'bg-blue-100', darkBg: 'bg-blue-900/25', border: 'border-blue-500/30' };
 
   if (loading) {
-    return (
-      <div className={`min-h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-        <Loader />
-      </div>
-    );
+    return <SkeletonLoader variant="frontend-bundle" />;
   }
 
   if (error) {
@@ -462,7 +458,16 @@ const FrontendQuestionBundle = () => {
 
               {questionsLoading ? (
                 <div className="flex justify-center py-16">
-                  <Loader />
+                  <div className="space-y-3 w-full">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <div key={i} className={`rounded-lg border p-4 animate-pulse ${isDark ? 'bg-gray-800/60 border-gray-800' : 'bg-white border-gray-200'}`}>
+                        <div className="flex items-center gap-3">
+                          <div className={`h-6 w-8 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                          <div className={`h-4 rounded flex-1 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`} style={{ maxWidth: `${50 + Math.random() * 40}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ) : paginatedQuestions.length === 0 ? (
                 <div className={`text-center py-16 rounded-xl border ${isDark ? 'bg-gray-800/50 border-gray-800' : 'bg-white border-gray-200'}`}>

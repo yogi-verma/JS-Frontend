@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../../../utils/WhiteDarkMode/useTheme";
-import Loader from "../../../../utils/Loader/Loader";
+import SkeletonLoader from "../../../../utils/SkeletonLoader/SkeletonLoader";
 import { getLessonById } from "../../../../utils/BackendCalls/authService";
 import Header from "../../../Header/Header";
 
@@ -169,11 +169,7 @@ const JavascriptLessonsByName = () => {
     };
 
     if (loading) {
-        return (
-            <div className={`min-h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <Loader />
-            </div>
-        );
+        return <SkeletonLoader variant="lesson-detail" />;
     }
 
     if (error) {

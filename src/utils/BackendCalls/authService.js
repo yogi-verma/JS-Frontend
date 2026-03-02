@@ -699,3 +699,231 @@ export const getFrontendCategories = async () => {
         throw err;
     }
 };
+
+// ═══════════════════════════════════════════════════
+// Coding Questions (LeetCode-style) API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Fetch all coding questions (with optional filters)
+ * @param {Object} params - Query params: difficulty, category, page, limit
+ * @returns {Promise<Object>} Object containing questions array and pagination
+ */
+export const getCodingQuestions = async (params = {}) => {
+    try {
+        const query = new URLSearchParams(params).toString();
+        const res = await fetch(`${BACKEND_URL}/api/coding-questions${query ? `?${query}` : ''}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch coding questions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding questions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch a single coding question by ID
+ * @param {string} id - The question ID
+ * @returns {Promise<Object>} Question object
+ */
+export const getCodingQuestionById = async (id) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-questions/${id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch coding question: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding question:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch coding questions stats
+ * @returns {Promise<Object>} Stats object
+ */
+export const getCodingQuestionsStats = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-questions/stats`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch coding questions stats: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding questions stats:', err);
+        throw err;
+    }
+};
+
+/**
+ * Run test cases against user code (visible test cases only, no progress saved)
+ * @param {string} questionId - The question ID
+ * @param {string} code - The user's code
+ * @returns {Promise<Object>} Test results
+ */
+export const runCodingTestCases = async (questionId, code) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress/run`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ questionId, code }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to run test cases: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error running test cases:', err);
+        throw err;
+    }
+};
+
+/**
+ * Submit solution (runs all test cases including hidden, saves progress)
+ * @param {string} questionId - The question ID
+ * @param {string} code - The user's code
+ * @returns {Promise<Object>} Submission results with accepted status
+ */
+export const submitCodingSolution = async (questionId, code) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ questionId, code }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to submit solution: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error submitting solution:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get user's coding progress for all questions
+ * @returns {Promise<Object>} Progress map { questionId: { isSolved, attempts, solvedAt } }
+ */
+export const getUserCodingProgress = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: {}, solvedCount: 0 };
+            throw new Error(`Failed to fetch coding progress: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding progress:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get user's last submission for a specific question
+ * @param {string} questionId - The question ID
+ * @returns {Promise<Object>} Submission data with code and results
+ */
+export const getUserCodingSubmission = async (questionId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress/submission/${questionId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: null };
+            throw new Error(`Failed to fetch submission: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding submission:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get all submissions for a specific question (submission history)
+ * @param {string} questionId - The question ID
+ * @returns {Promise<Object>} Array of submissions sorted newest first
+ */
+export const getUserCodingSubmissions = async (questionId) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress/submissions/${questionId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: [] };
+            throw new Error(`Failed to fetch submissions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding submissions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get user's coding stats
+ * @returns {Promise<Object>} Stats with solved counts by difficulty
+ */
+export const getUserCodingStats = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/coding-progress/stats`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: {} };
+            throw new Error(`Failed to fetch coding stats: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching coding stats:', err);
+        throw err;
+    }
+};

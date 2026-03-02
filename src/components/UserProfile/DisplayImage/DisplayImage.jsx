@@ -16,7 +16,6 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState("");
 
-  // Status options with icons and labels
   const statusOptions = [
     { value: "busy", label: "Busy", icon: "⏰", color: "#EF4444" },
     { value: "focusing", label: "Focusing", icon: "🎯", color: "#8B5CF6" },
@@ -132,88 +131,73 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
 
   return (
     <>
-      <div className="relative group">
-        {user.photo ? (
-          <img
-            src={user.photo}
-            alt={user.displayName}
-            onClick={() => setShowImageModal(true)}
-            className={`w-30 h-30 rounded-full border-4 object-cover shadow-xl cursor-pointer transition-transform hover:scale-105 ${
-              isDark ? "border-gray-800" : "border-white"
-            }`}
-            title="Click to view full size"
-          />
-        ) : (
-          <div
-            className={`w-30 h-30 rounded-full border-4 flex items-center justify-center text-3xl font-bold shadow-xl ${
-              isDark ? "border-gray-800" : "border-white"
-            }`}
+      {/* GitHub-style avatar */}
+      <div className="relative w-full flex justify-center">
+        <div className="relative group">
+          {user.photo ? (
+            <img
+              src={user.photo}
+              alt={user.displayName}
+              onClick={() => setShowImageModal(true)}
+              className="w-32 h-32 rounded-full object-cover cursor-pointer transition-all duration-200 hover:opacity-90"
+              style={{
+                border: `2px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
+              }}
+              title="Click to view full size"
+            />
+          ) : (
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-semibold cursor-pointer"
+              style={{
+                background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueDark})`,
+                color: "#FFFFFF",
+                border: `2px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
+              }}
+              onClick={() => openEditPhotoModal()}
+            >
+              {getInitials(user.displayName)}
+            </div>
+          )}
+
+          {/* Camera button - visible on hover */}
+          <button
+            onClick={openEditPhotoModal}
+            className="absolute bottom-2 right-2 p-1.5 rounded-full shadow-lg transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100"
             style={{
-              background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.blueMid})`,
-              color: colors.textLight,
+              background: isDark ? "#21262D" : "#FFFFFF",
+              border: `2px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
             }}
+            title="Change photo"
           >
-            {getInitials(user.displayName)}
-          </div>
-        )}
-        <button
-          onClick={openEditPhotoModal}
-          className={`absolute bottom-0 right-0 p-2 rounded-full shadow-lg transition-all transform hover:scale-110 ${
-            isDark
-              ? "bg-gray-700 hover:bg-gray-600"
-              : "bg-white hover:bg-gray-50"
-          }`}
-          style={{
-            border: `2px solid ${isDark ? "#1F2937" : colors.white}`,
-          }}
-          title="Edit photo"
-        >
-          <FiCamera
-            className="w-4 h-4"
-            style={{
-              color: isDark ? colors.blueLight : colors.blueMid,
-            }}
-          />
-        </button>
-        
-        {/* Status Badge */}
-        {currentStatusInfo && (
+            <FiCamera
+              className="w-3 h-3"
+              style={{ color: isDark ? "#E6EDF3" : "#24292F" }}
+            />
+          </button>
+
+          {/* Status Badge */}
           <button
             onClick={openEditStatusModal}
-            className={`absolute bottom-0 left-0 p-1.5 rounded-full shadow-lg transition-all transform hover:scale-110 cursor-pointer ${
-              isDark
-                ? "bg-gray-700 hover:bg-gray-600"
-                : "bg-white hover:bg-gray-50"
-            }`}
+            className="absolute bottom-2 left-2 rounded-full shadow-lg transition-all transform hover:scale-110 cursor-pointer"
             style={{
-              border: `2px solid ${isDark ? "#1F2937" : colors.white}`,
+              background: isDark ? "#21262D" : "#FFFFFF",
+              border: `2px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
+              padding: currentStatusInfo ? "4px 8px" : "4px 6px",
             }}
-            title={`Status: ${currentStatusInfo.label} - Click to change`}
+            title={currentStatusInfo ? `Status: ${currentStatusInfo.label}` : "Set status"}
           >
-            <span className="text-base leading-none">{currentStatusInfo.icon}</span>
+            {currentStatusInfo ? (
+              <span className="text-sm leading-none">{currentStatusInfo.icon}</span>
+            ) : (
+              <span className="text-xs leading-none" style={{ color: isDark ? "#8B949E" : "#656D76" }}>
+                😀
+              </span>
+            )}
           </button>
-        )}
-        
-        {/* Add Status Button (when no status set) */}
-        {!currentStatusInfo && (
-          <button
-            onClick={openEditStatusModal}
-            className={`absolute bottom-0 left-0 w-6 h-6 flex items-center justify-center rounded-full shadow-lg transition-all transform hover:scale-110 text-lg ${
-              isDark
-                ? "bg-gray-700 hover:bg-gray-600 text-gray-400"
-                : "bg-white hover:bg-gray-50 text-gray-500"
-            }`}
-            style={{
-              border: `2px solid ${isDark ? "#1F2937" : colors.white}`,
-            }}
-            title="Set status"
-          >
-            +
-          </button>
-        )}
+        </div>
       </div>
 
-      {/* Image Modal */}
+      {/* ===== Image View Modal ===== */}
       {user.photo && (
         <div
           className={`fixed inset-0 z-60 flex items-center justify-center p-4 transition-all duration-300 ${
@@ -223,23 +207,19 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
         >
           <div
             className="absolute inset-0 backdrop-blur-lg"
-            style={{
-              background: `${isDark ? "rgba(0, 0, 0, 0.92)" : "rgba(0, 0, 0, 0.85)"}`,
-            }}
+            style={{ background: isDark ? "rgba(1,4,9,0.92)" : "rgba(0,0,0,0.80)" }}
             onClick={() => setShowImageModal(false)}
             aria-hidden="true"
           />
-
           <button
             type="button"
             onClick={() => setShowImageModal(false)}
-            className={`fixed top-6 right-6 p-2 rounded-full shadow-xl transition-all duration-200 hover:scale-110 hover:rotate-90 z-70 backdrop-blur-md ${
+            className={`fixed top-5 right-5 p-2 rounded-full z-70 transition-all hover:scale-110 ${
               isDark
-                ? "bg-gray-800/80 hover:bg-gray-700/90 text-gray-100 border border-gray-600/50"
+                ? "bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-600/50"
                 : "bg-white/90 hover:bg-white text-gray-800 border border-gray-200"
             }`}
-            aria-label="Close modal"
-            title="Close (Esc)"
+            aria-label="Close"
           >
             <FiX className="w-5 h-5" />
           </button>
@@ -247,89 +227,74 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
           <div
             role="dialog"
             aria-modal="true"
-            aria-labelledby="image-modal-title"
-            className={`relative max-w-5xl w-full mx-auto transition-transform duration-300 ${
+            className={`relative max-w-4xl w-full mx-auto transition-transform duration-300 ${
               showImageModal ? "scale-100" : "scale-95"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="rounded-2xl overflow-hidden shadow-2xl"
+              className="rounded-xl overflow-hidden"
               style={{
-                background: isDark ? "#1F2937" : colors.white,
-                border: `2px solid ${isDark ? "#374151" : "#E5E7EB"}`,
+                background: isDark ? "#161B22" : "#FFFFFF",
+                border: `1px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
               }}
             >
-              <div className="relative p-3 sm:p-4">
+              <div className="p-3">
                 <img
                   src={user.photo}
                   alt={user.displayName}
-                  className="w-full h-auto object-contain rounded-xl mx-auto"
-                  style={{ 
-                    maxHeight: "75vh",
-                    boxShadow: isDark 
-                      ? "0 10px 40px rgba(0, 0, 0, 0.5)" 
-                      : "0 10px 40px rgba(0, 0, 0, 0.15)"
-                  }}
+                  className="w-full h-auto object-contain rounded-lg mx-auto"
+                  style={{ maxHeight: "75vh" }}
                 />
               </div>
-
               <div
-                className="px-6 py-4 border-t"
+                className="px-5 py-3 flex items-center justify-between"
                 style={{
-                  borderColor: isDark ? "#374151" : "#E5E7EB",
-                  background: isDark ? "#111827" : "#F9FAFB",
+                  borderTop: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}`,
+                  background: isDark ? "#0D1117" : "#F6F8FA",
                 }}
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3
-                      id="image-modal-title"
-                      className={`text-base font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}
-                    >
-                      {user.displayName}'s Profile Photo
-                    </h3>
-                    <p className={`text-sm mt-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                      Click outside or press Esc to close
-                    </p>
-                  </div>
-                  <button
-                    className={`px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 ${
-                      isDark
-                        ? "bg-blue-900/50 hover:bg-blue-800/60 text-blue-200"
-                        : "bg-blue-100 hover:bg-blue-200 text-blue-700"
-                    }`}
-                    title="Change photo"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowImageModal(false);
-                      openEditPhotoModal();
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <FiCamera className="w-4 h-4" />
-                      <span className="hidden sm:inline">Change Photo</span>
-                    </div>
-                  </button>
+                <div>
+                  <p className={`text-sm font-medium ${isDark ? "text-gray-200" : "text-gray-800"}`}>
+                    {user.displayName}&#39;s Profile Photo
+                  </p>
+                  <p className={`text-xs mt-0.5 ${isDark ? "text-gray-500" : "text-gray-500"}`}>
+                    Press Esc to close
+                  </p>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowImageModal(false);
+                    openEditPhotoModal();
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors border ${
+                    isDark
+                      ? "border-gray-600 text-gray-200 hover:bg-gray-700 bg-[#21262D]"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-50 bg-white"
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <FiCamera className="w-3.5 h-3.5" />
+                    Change
+                  </span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Edit Photo Modal */}
+      {/* ===== Edit Photo Modal ===== */}
       <div
-        className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-60 flex items-center justify-center p-4 transition-opacity duration-300 ${
           showEditPhotoModal ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!showEditPhotoModal}
       >
         <div
           className="absolute inset-0 backdrop-blur-sm"
-          style={{
-            background: `${isDark ? "rgba(0, 0, 0, 0.85)" : "rgba(0, 0, 0, 0.7)"}`,
-          }}
+          style={{ background: isDark ? "rgba(1,4,9,0.85)" : "rgba(0,0,0,0.5)" }}
           onClick={() => setShowEditPhotoModal(false)}
           aria-hidden="true"
         />
@@ -337,82 +302,82 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="edit-photo-modal-title"
-          className="relative w-full max-w-md rounded-lg shadow-lg p-4"
+          className="relative w-full max-w-md rounded-xl shadow-2xl"
           style={{
-            background: isDark ? "#1F2937" : colors.white,
-            border: `1px solid ${isDark ? "#374151" : "#E5E7EB"}`,
+            background: isDark ? "#161B22" : "#FFFFFF",
+            border: `1px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between mb-6">
-            <h2
-              id="edit-photo-modal-title"
-              className={`text-xl font-bold ${isDark ? "text-gray-100" : "text-gray-900"}`}
-            >
-              Edit Photo
+          <div
+            className="px-5 py-3 flex items-center justify-between"
+            style={{ borderBottom: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
+          >
+            <h2 className={`text-base font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+              Edit profile picture
             </h2>
             <button
               type="button"
               onClick={() => setShowEditPhotoModal(false)}
-              className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-100 text-gray-600"}`}
-              aria-label="Close modal"
+              className={`p-1.5 rounded-md transition-colors ${isDark ? "hover:bg-gray-700 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+              aria-label="Close"
             >
               <FiX className="w-5 h-5" />
             </button>
           </div>
 
-          {newPhotoUrl && (
-            <div className="mb-4 flex justify-center">
-              <img
-                src={newPhotoUrl}
-                alt="Photo preview"
-                className="w-32 h-32 rounded-full object-cover border-2"
-                style={{ borderColor: isDark ? "#374151" : "#E5E7EB" }}
-                onError={(e) => {
-                  e.target.style.display = "none";
-                }}
-              />
-            </div>
-          )}
-
-          <div className="mb-4">
-            <label
-              htmlFor="photoFile"
-              className={`block text-sm font-medium mb-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}
-            >
-              Select Photo
-            </label>
-            <input
-              id="photoFile"
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoFileChange}
-              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:cursor-pointer ${
-                isDark
-                  ? "bg-gray-800 border-gray-600 text-gray-100 focus:border-blue-500 file:bg-blue-900 file:text-blue-200 hover:file:bg-blue-800"
-                  : "bg-white border-gray-300 text-gray-900 focus:border-blue-500 file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-              }`}
-              disabled={isUpdating}
-            />
-            <p
-              className={`mt-2 text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}
-            >
-              Supported formats: JPG, PNG, GIF, WebP (Max 5MB)
-            </p>
-            {updateError && (
-              <p className="mt-2 text-sm text-red-500">{updateError}</p>
+          <div className="p-5">
+            {newPhotoUrl && (
+              <div className="mb-4 flex justify-center">
+                <img
+                  src={newPhotoUrl}
+                  alt="Preview"
+                  className="w-36 h-36 rounded-full object-cover"
+                  style={{ border: `2px solid ${isDark ? "#30363D" : "#D0D7DE"}` }}
+                  onError={(e) => { e.target.style.display = "none"; }}
+                />
+              </div>
             )}
+
+            <div className="mb-4">
+              <label
+                htmlFor="photoFile"
+                className={`block text-sm font-medium mb-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}
+              >
+                Upload a photo
+              </label>
+              <input
+                id="photoFile"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoFileChange}
+                className={`w-full px-3 py-2 rounded-md text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:cursor-pointer ${
+                  isDark
+                    ? "bg-[#0D1117] border border-gray-600 text-gray-200 file:bg-[#21262D] file:text-gray-200"
+                    : "bg-white border border-gray-300 text-gray-900 file:bg-gray-100 file:text-gray-700"
+                }`}
+                disabled={isUpdating}
+              />
+              <p className={`mt-1.5 text-xs ${isDark ? "text-gray-500" : "text-gray-500"}`}>
+                JPG, PNG, GIF, WebP — Max 5MB
+              </p>
+              {updateError && (
+                <p className="mt-2 text-sm text-red-500">{updateError}</p>
+              )}
+            </div>
           </div>
 
-          <div className="flex gap-3 justify-end">
+          <div
+            className="px-5 py-3 flex gap-2 justify-end"
+            style={{ borderTop: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
+          >
             <button
               type="button"
               onClick={() => setShowEditPhotoModal(false)}
-              className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-80 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
                 isDark
-                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  ? "border-gray-600 text-gray-200 hover:bg-gray-700 bg-[#21262D]"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50 bg-white"
               }`}
               disabled={isUpdating}
             >
@@ -421,35 +386,28 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
             <button
               type="button"
               onClick={handleUpdatePhoto}
-              className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-90 ${
-                isUpdating ? "opacity-50 cursor-not-allowed" : ""
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white transition-colors ${
+                isUpdating ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
               }`}
-              style={{
-                background: isDark ? colors.blueDark : colors.blueLight,
-                color: colors.textLight,
-              }}
+              style={{ background: "#238636" }}
               disabled={isUpdating}
             >
-              {isUpdating ? "Saving..." : "Save"}
+              {isUpdating ? "Saving..." : "Set new photo"}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Edit Status Modal */}
+      {/* ===== Edit Status Modal ===== */}
       <div
-        className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-60 flex items-center justify-center p-4 transition-opacity duration-300 ${
           showEditStatusModal ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!showEditStatusModal}
       >
         <div
-          className="absolute inset-0 backdrop-blur-md"
-          style={{
-            background: isDark
-              ? "rgba(0, 0, 0, 0.85)"
-              : "rgba(0, 0, 0, 0.7)",
-          }}
+          className="absolute inset-0 backdrop-blur-sm"
+          style={{ background: isDark ? "rgba(1,4,9,0.85)" : "rgba(0,0,0,0.5)" }}
           onClick={() => !isUpdating && setShowEditStatusModal(false)}
           aria-hidden="true"
         />
@@ -457,116 +415,102 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="edit-status-modal-title"
-          className="relative rounded-lg shadow-lg max-w-md w-full p-4"
+          className="relative rounded-xl shadow-2xl max-w-md w-full"
           style={{
-            background: isDark ? "#1F2937" : colors.white,
-            border: `1px solid ${isDark ? "#374151" : "#E5E7EB"}`,
+            background: isDark ? "#161B22" : "#FFFFFF",
+            border: `1px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <h2
-            id="edit-status-modal-title"
-            className={`text-xl font-bold mb-3 ${
-              isDark ? "text-gray-100" : "text-gray-900"
-            }`}
+          <div
+            className="px-5 py-3 flex items-center justify-between"
+            style={{ borderBottom: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
           >
-            Update Status
-          </h2>
-
-          <p
-            className={`text-xs mb-5 ${
-              isDark ? "text-gray-400" : "text-gray-600"
-            }`}
-          >
-            Choose your current status to let others know what you're up to.
-          </p>
-
-          {/* Status Options Grid */}
-          <div className="grid grid-cols-2 gap-2 mb-5">
-            {statusOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setSelectedStatus(option.value)}
-                className={`p-4 rounded-xl border-2 transition-all ${
-                  selectedStatus === option.value
-                    ? "border-blue-500 scale-105"
-                    : isDark
-                    ? "border-gray-600 hover:border-gray-500"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                style={{
-                  background:
-                    selectedStatus === option.value
-                      ? isDark
-                        ? "rgba(59, 130, 246, 0.1)"
-                        : "rgba(59, 130, 246, 0.05)"
-                      : isDark
-                      ? "#374151"
-                      : "#F9FAFB",
-                }}
-                disabled={isUpdating}
-              >
-                  <div className="flex flex-col items-center gap-1.5">
-                    <span className="text-2xl">{option.icon}</span>
-                  <span
-                    className={`text-sm font-medium ${
-                      isDark ? "text-gray-200" : "text-gray-700"
-                    }`}
-                  >
-                    {option.label}
-                  </span>
-                </div>
-              </button>
-            ))}
+            <h2 className={`text-base font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+              Edit status
+            </h2>
+            <button
+              type="button"
+              onClick={() => !isUpdating && setShowEditStatusModal(false)}
+              className={`p-1.5 rounded-md transition-colors ${isDark ? "hover:bg-gray-700 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+              aria-label="Close"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Clear Status Button */}
-          <button
-            onClick={() => setSelectedStatus(null)}
-            className={`w-full p-2.5 rounded-lg border mb-5 transition ${
-              selectedStatus === null
-                ? "border-blue-500 bg-blue-50"
-                : isDark
-                ? "border-gray-600 hover:border-gray-500 bg-gray-700"
-                : "border-gray-200 hover:border-gray-300 bg-gray-50"
-            }`}
-            disabled={isUpdating}
-          >
-            <span
-              className={`text-sm font-medium ${
-                selectedStatus === null
-                  ? "text-blue-600"
-                  : isDark
-                  ? "text-gray-300"
-                  : "text-gray-700"
-              }`}
-            >
-              {selectedStatus === null ? "✓ " : ""}Clear Status
-            </span>
-          </button>
+          <div className="p-5">
+            <p className={`text-xs mb-4 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+              What&#39;s happening?
+            </p>
 
-          {updateError && (
-            <div
-              className="mb-4 p-3 rounded-lg text-sm"
-              style={{
-                background: isDark ? "#7F1D1D" : "#FEE2E2",
-                color: isDark ? "#FCA5A5" : "#991B1B",
-              }}
-            >
-              {updateError}
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              {statusOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedStatus(option.value)}
+                  className={`p-3 rounded-lg border text-sm transition-all ${
+                    selectedStatus === option.value
+                      ? isDark
+                        ? "border-blue-500 bg-blue-500/10"
+                        : "border-blue-500 bg-blue-50"
+                      : isDark
+                        ? "border-gray-600 hover:border-gray-500 bg-[#0D1117]"
+                        : "border-gray-200 hover:border-gray-300 bg-gray-50"
+                  }`}
+                  disabled={isUpdating}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{option.icon}</span>
+                    <span className={`font-medium ${isDark ? "text-gray-200" : "text-gray-700"}`}>
+                      {option.label}
+                    </span>
+                  </div>
+                </button>
+              ))}
             </div>
-          )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3">
+            <button
+              onClick={() => setSelectedStatus(null)}
+              className={`w-full p-2 rounded-lg border text-sm font-medium mb-4 transition-colors ${
+                selectedStatus === null
+                  ? isDark
+                    ? "border-blue-500 bg-blue-500/10 text-blue-400"
+                    : "border-blue-500 bg-blue-50 text-blue-600"
+                  : isDark
+                    ? "border-gray-600 hover:border-gray-500 bg-[#0D1117] text-gray-300"
+                    : "border-gray-200 hover:border-gray-300 bg-gray-50 text-gray-600"
+              }`}
+              disabled={isUpdating}
+            >
+              {selectedStatus === null ? "✓ " : ""}Clear status
+            </button>
+
+            {updateError && (
+              <div
+                className="mb-2 p-3 rounded-lg text-sm"
+                style={{
+                  background: isDark ? "rgba(248,81,73,0.1)" : "#FFF1F0",
+                  color: isDark ? "#F85149" : "#CF222E",
+                  border: `1px solid ${isDark ? "rgba(248,81,73,0.4)" : "#FFD8D3"}`,
+                }}
+              >
+                {updateError}
+              </div>
+            )}
+          </div>
+
+          <div
+            className="px-5 py-3 flex gap-2 justify-end"
+            style={{ borderTop: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
+          >
             <button
               onClick={() => setShowEditStatusModal(false)}
               disabled={isUpdating}
-              className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
                 isDark
-                  ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  ? "border-gray-600 text-gray-200 hover:bg-gray-700 bg-[#21262D]"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50 bg-white"
               }`}
             >
               Cancel
@@ -574,13 +518,12 @@ const DisplayImage = ({ user, isDark, getInitials }) => {
             <button
               onClick={handleUpdateStatus}
               disabled={isUpdating}
-              className="flex-1 px-4 py-2.5 rounded-lg font-medium transition hover:opacity-90 disabled:opacity-50"
-              style={{
-                background: isDark ? colors.blueDark : colors.blueLight,
-                color: colors.textLight,
-              }}
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white transition-colors ${
+                isUpdating ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+              }`}
+              style={{ background: "#238636" }}
             >
-              {isUpdating ? "Updating..." : "Save Status"}
+              {isUpdating ? "Saving..." : "Set status"}
             </button>
           </div>
         </div>

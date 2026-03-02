@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { FiUser, FiEdit, FiX } from "react-icons/fi";
-import colors from "../../../utils/color";
+import { FiX } from "react-icons/fi";
 import { useUser } from "../../../utils/UserContext/UserContext";
 import { useNotification } from "../../../utils/Notification";
 import { updateDisplayName } from "../../../utils/BackendCalls/authService";
@@ -62,50 +61,34 @@ const DisplayName = ({ user, isDark }) => {
 
   return (
     <>
+      {/* Settings row */}
       <div
-        className="rounded-lg p-4 shadow-sm"
-        style={{
-          background: isDark ? "#1F2937" : colors.white,
-          border: `1px solid ${isDark ? "#374151" : "#E5E7EB"}`,
-        }}
+        className={`flex items-center justify-between px-4 py-3 transition-colors ${
+          isDark ? "hover:bg-[#1C2128]" : "hover:bg-gray-50"
+        }`}
+        style={{ borderBottom: `1px solid ${isDark ? "#21262D" : "#EAEEF2"}` }}
       >
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-md flex items-center justify-center"
-              style={{
-                background: isDark
-                  ? "rgba(96, 165, 250, 0.2)"
-                  : "rgba(96, 165, 250, 0.1)",
-              }}
-            >
-              <FiUser className="w-3.5 h-3.5" style={{ color: colors.blueLight }} />
-            </div>
-            <h3
-              className={`text-sm font-semibold ${isDark ? "text-gray-200" : "text-gray-800"}`}
-            >
-              Display Name
-            </h3>
-          </div>
-          <button
-            onClick={openEditModal}
-            className={`p-1.5 rounded-md transition-all hover:scale-110 ${isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
-            title="Edit display name"
-          >
-            <FiEdit
-              className="w-3.5 h-3.5"
-              style={{ color: isDark ? colors.blueLight : colors.blueMid }}
-            />
-          </button>
+        <div className="flex-1 min-w-0">
+          <label className={`text-[10px] font-semibold uppercase tracking-wider ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+            Name
+          </label>
+          <p className={`text-xs mt-0.5 ${isDark ? "text-gray-200" : "text-gray-900"}`}>
+            {user.displayName || "Not set"}
+          </p>
         </div>
-        <p
-          className={`text-sm ${isDark ? "text-gray-300" : "text-gray-700"}`}
+        <button
+          onClick={openEditModal}
+          className={`ml-4 px-2.5 py-0.5 rounded-md text-[10px] font-medium transition-colors border shrink-0 ${
+            isDark
+              ? "border-gray-600 text-gray-300 hover:bg-gray-700 bg-[#21262D]"
+              : "border-gray-300 text-gray-600 hover:bg-gray-100 bg-white"
+          }`}
         >
-          {user.displayName || "Not set"}
-        </p>
+          Edit
+        </button>
       </div>
 
-      {/* Edit Display Name Modal */}
+      {/* Edit Modal */}
       <div
         className={`fixed inset-0 z-60 flex items-center justify-center p-4 transition-opacity duration-300 ${
           showEditModal ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -114,9 +97,7 @@ const DisplayName = ({ user, isDark }) => {
       >
         <div
           className="absolute inset-0 backdrop-blur-sm"
-          style={{
-            background: `${isDark ? "rgba(0, 0, 0, 0.85)" : "rgba(0, 0, 0, 0.7)"}`,
-          }}
+          style={{ background: isDark ? "rgba(1,4,9,0.85)" : "rgba(0,0,0,0.5)" }}
           onClick={() => setShowEditModal(false)}
           aria-hidden="true"
         />
@@ -124,32 +105,31 @@ const DisplayName = ({ user, isDark }) => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="edit-name-modal-title"
-          className="relative w-full max-w-md rounded-xl shadow-2xl p-6"
+          className="relative w-full max-w-md rounded-xl shadow-2xl"
           style={{
-            background: isDark ? "#1F2937" : colors.white,
-            border: `1px solid ${isDark ? "#374151" : "#E5E7EB"}`,
+            background: isDark ? "#161B22" : "#FFFFFF",
+            border: `1px solid ${isDark ? "#30363D" : "#D0D7DE"}`,
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between mb-6">
-            <h2
-              id="edit-name-modal-title"
-              className={`text-xl font-bold ${isDark ? "text-gray-100" : "text-gray-900"}`}
-            >
-              Edit Display Name
+          <div
+            className="px-5 py-3 flex items-center justify-between"
+            style={{ borderBottom: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
+          >
+            <h2 className={`text-base font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+              Edit display name
             </h2>
             <button
               type="button"
               onClick={() => setShowEditModal(false)}
-              className={`p-2 rounded-lg transition-all hover:scale-110 ${isDark ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-100 text-gray-600"}`}
-              aria-label="Close modal"
+              className={`p-1.5 rounded-md transition-colors ${isDark ? "hover:bg-gray-700 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+              aria-label="Close"
             >
               <FiX className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="mb-4">
+          <div className="p-5">
             <label
               htmlFor="displayName"
               className={`block text-sm font-medium mb-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}
@@ -161,17 +141,15 @@ const DisplayName = ({ user, isDark }) => {
               type="text"
               value={newDisplayName}
               onChange={(e) => setNewDisplayName(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
+              className={`w-full px-3 py-2 rounded-md text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDark
-                  ? "bg-gray-800 border-gray-600 text-gray-100 focus:border-blue-500"
-                  : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                  ? "bg-[#0D1117] border border-gray-600 text-gray-200"
+                  : "bg-white border border-gray-300 text-gray-900"
               }`}
               placeholder="Enter your display name"
               disabled={isUpdating}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !isUpdating) {
-                  handleUpdate();
-                }
+                if (e.key === "Enter" && !isUpdating) handleUpdate();
               }}
             />
             {updateError && (
@@ -179,14 +157,17 @@ const DisplayName = ({ user, isDark }) => {
             )}
           </div>
 
-          <div className="flex gap-3 justify-end">
+          <div
+            className="px-5 py-3 flex gap-2 justify-end"
+            style={{ borderTop: `1px solid ${isDark ? "#21262D" : "#D0D7DE"}` }}
+          >
             <button
               type="button"
               onClick={() => setShowEditModal(false)}
-              className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-80 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
                 isDark
-                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  ? "border-gray-600 text-gray-200 hover:bg-gray-700 bg-[#21262D]"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50 bg-white"
               }`}
               disabled={isUpdating}
             >
@@ -195,13 +176,10 @@ const DisplayName = ({ user, isDark }) => {
             <button
               type="button"
               onClick={handleUpdate}
-              className={`px-5 py-2.5 rounded-lg font-medium transition hover:opacity-90 ${
-                isUpdating ? "opacity-50 cursor-not-allowed" : ""
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white transition-colors ${
+                isUpdating ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
               }`}
-              style={{
-                background: isDark ? colors.blueDark : colors.blueLight,
-                color: colors.textLight,
-              }}
+              style={{ background: "#238636" }}
               disabled={isUpdating}
             >
               {isUpdating ? "Saving..." : "Save"}
