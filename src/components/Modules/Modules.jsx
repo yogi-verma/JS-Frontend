@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
-import Loader from "../../utils/Loader/Loader";
+import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 import colors from "../../utils/color";
 import { getModules } from "../../utils/BackendCalls/authService";
 
@@ -39,11 +39,7 @@ const Modules = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className={`flex justify-center items-center min-h-[60vh] ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <Loader />
-            </div>
-        );
+        return <SkeletonLoader variant="modules" />;
     }
 
     if (error) {

@@ -12,6 +12,8 @@ import UserProfile from './components/UserProfile/UserProfile';
 import JavascriptInterviewQuestions from './components/JavascriptInterviewQuestions/JavascriptInterviewQuestions';
 import FrontendQuestionBundleButton from './components/FrontendQuestionsBundle/FrontendQuestionBundleButton';
 import FrontendQuestionBundle from './components/FrontendQuestionsBundle/FrontendQuestionBundle';
+import JavascriptMachineCoding from './components/JavascriptMachineCoding/JavascriptMachineCoding';
+import CodingWorkspace from './components/JavascriptMachineCoding/CodingWorkspace';
 
 function App() {
     return (
@@ -75,6 +77,23 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <FrontendQuestionBundle />
+                                </ProtectedRoute>
+                            } 
+                        />
+
+                        <Route 
+                            path="/dashboard/coding-questions" 
+                            element={
+                                <ProtectedRoute>
+                                    <JavascriptMachineCoding />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/dashboard/coding-questions/:questionId" 
+                            element={
+                                <ProtectedRoute>
+                                    <CodingWorkspace />
                                 </ProtectedRoute>
                             } 
                         />

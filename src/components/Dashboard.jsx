@@ -4,22 +4,19 @@ import Header from "./Header/Header";
 import Section from "./Section/Section";
 import Reason from "./Reason/Reason";
 import Modules from "./Modules/Modules";
-import Loader from "../utils/Loader/Loader";
+import SkeletonLoader from "../utils/SkeletonLoader/SkeletonLoader";
 import Footer from "./Footer/Footer";
 import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptCompilerButton";
 import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
 import FrontendQuestionBundleButton from "./FrontendQuestionsBundle/FrontendQuestionBundleButton";
+import JavascriptMachineCodingButton from "./JavascriptMachineCoding/JavascriptMachineCodingButton";
 
 const Dashboard = () => {
     const { loading } = useUser();
     const { isDark } = useTheme();
 
     if (loading) {
-        return (
-            <div className={`h-screen flex justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <Loader />
-            </div>
-        );
+        return <SkeletonLoader variant="dashboard" />;
     }
 
     return (
@@ -39,6 +36,8 @@ const Dashboard = () => {
             <Reason />
 
             <FrontendQuestionBundleButton />
+
+            <JavascriptMachineCodingButton />
 
             <Footer />
 
