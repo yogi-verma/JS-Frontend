@@ -4,7 +4,7 @@ import { useUser } from "../../utils/UserContext/UserContext";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import { FiArrowLeft, FiUser, FiBriefcase, FiShare2, FiShield, FiMail, FiCalendar, FiHash } from "react-icons/fi";
+import { FiArrowLeft, FiUser, FiBriefcase, FiShare2, FiShield, FiMail, FiCalendar, FiHash, FiZap } from "react-icons/fi";
 import { initEmailJS } from "../../utils/emailService";
 import DisplayName from "./DisplayName/DisplayName";
 import DisplayEmail from "./DisplayEmail/DisplayEmail";
@@ -16,6 +16,7 @@ import DisplayWebsite from "./DisplayWebsite/DisplayWebsite";
 import DisplaySocialLinks from "./DisplaySocialLinks/DisplaySocialLinks";
 import DisplayAccountInformation from "./DisplayAccountInformation/DisplayAccountInformation";
 import ProgressAnalytics from "./ProgressAnalytics/ProgressAnalytics";
+import Streak from "./Streak/Streak";
 
 /* ─── Reusable card wrapper ─── */
 const ProfileCard = ({ icon, title, iconColor, isDark, children }) => {
@@ -63,10 +64,13 @@ const UserProfile = () => {
     initEmailJS();
   }, []);
 
-  /* Force re-render after user updates so cards reflect changes */
   useEffect(() => {
     setForceRender((v) => v + 1);
   }, [user]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!user) {
     return (
@@ -207,6 +211,20 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* ============ ROW 1.5 — Streak Calendar ============ */}
+        <div className="mt-5">
+          <ProfileCard
+            icon={FiZap}
+            title="Activity Streak"
+            iconColor="#F59E0B"
+            isDark={isDark}
+          >
+            <div className="p-4">
+              <Streak isDark={isDark} />
+            </div>
+          </ProfileCard>
         </div>
 
         {/* ============ ROW 2 — Personal + Professional ============ */}

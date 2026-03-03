@@ -145,6 +145,8 @@ const CodingWorkspace = () => {
 
   // Congratulations overlay
   const [showCongrats, setShowCongrats] = useState(false);
+  const [congratsType, setCongratsType] = useState(null); // 'streak' | 'extra'
+  const [streakInfo, setStreakInfo] = useState(null); // { currentStreak, todaySolveCount }
 
   // Submissions history
   const [submissions, setSubmissions] = useState([]);
@@ -300,8 +302,17 @@ const CodingWorkspace = () => {
       if (res?.success && res?.data) {
         setSubmitResult(res.data);
         if (res.data.accepted) {
+          // Determine congrats type from streak data
+          const streak = res.data.streak;
+          if (streak) {
+            setStreakInfo(streak);
+            setCongratsType(streak.isFirstOfDay ? 'streak' : 'extra');
+          } else {
+            setCongratsType('extra');
+            setStreakInfo(null);
+          }
           setShowCongrats(true);
-          setTimeout(() => setShowCongrats(false), 4000);
+          setTimeout(() => setShowCongrats(false), 5000);
           // Refresh progress map
           try {
             const progressRes = await getUserCodingProgress();
@@ -404,65 +415,193 @@ const CodingWorkspace = () => {
   return (
     <div className={`h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Congratulations Overlay */}
-      {showCongrats && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      {showCongrats && congratsType === 'streak' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style={{ animation: 'congratsFadeIn 0.4s ease-out' }}>
+          {/* Particle effects */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  background: ['#F59E0B', '#EF4444', '#F97316', '#FBBF24', '#FCD34D'][i % 5],
+                  animation: `congratsParticle ${1.5 + Math.random() * 2}s ease-out ${Math.random() * 0.5}s forwards`,
+                  opacity: 0,
+                }}
+              />
+            ))}
+          </div>
+          <div
+            className={`pointer-events-auto relative flex flex-col items-center gap-4 px-10 py-8 rounded-3xl shadow-2xl border backdrop-blur-md ${
+              isDark
+                ? 'bg-gray-800/95 border-amber-500/30 shadow-amber-500/20'
+                : 'bg-white/95 border-amber-300 shadow-amber-200/40'
+            }`}
+            style={{ animation: 'congratsScaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+          >
+            {/* Glow ring */}
+            <div className="absolute inset-0 rounded-3xl" style={{
+              background: isDark
+                ? 'radial-gradient(ellipse at center, rgba(245,158,11,0.08) 0%, transparent 70%)'
+                : 'radial-gradient(ellipse at center, rgba(245,158,11,0.06) 0%, transparent 70%)',
+              animation: 'congratsPulseGlow 2s ease-in-out infinite',
+            }} />
+            {/* Fire icon */}
+            <div
+              className="relative flex items-center justify-center w-20 h-20 rounded-full"
+              style={{
+                background: isDark
+                  ? 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.2))'
+                  : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15))',
+                animation: 'congratsFirePulse 1.5s ease-in-out infinite',
+              }}
+            >
+              <span className="text-4xl" style={{ animation: 'congratsFireBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both' }}>
+                🔥
+              </span>
+            </div>
+            {/* Day count */}
+            <div className="text-center relative" style={{ animation: 'congratsFadeUp 0.5s ease-out 0.3s both' }}>
+              <div className={`text-3xl font-black tracking-tight ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
+                Day {streakInfo?.currentStreak || 1}
+              </div>
+              <div className={`text-sm font-semibold mt-1 ${isDark ? 'text-amber-500/80' : 'text-amber-600/80'}`}
+                style={{ animation: 'congratsFadeUp 0.5s ease-out 0.45s both' }}
+              >
+                {streakInfo?.currentStreak > 1 ? `${streakInfo.currentStreak} day streak!` : 'Streak started!'}
+              </div>
+            </div>
+            {/* Motivational message */}
+            <p className={`text-sm font-medium max-w-xs text-center leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+              style={{ animation: 'congratsFadeUp 0.5s ease-out 0.55s both' }}
+            >
+              Consistency is key to success
+            </p>
+            {/* Progress bar */}
+            <div className="w-full max-w-50 relative" style={{ animation: 'congratsFadeUp 0.5s ease-out 0.65s both' }}>
+              <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${Math.min((streakInfo?.currentStreak || 1) / 30 * 100, 100)}%`,
+                    background: 'linear-gradient(90deg, #F59E0B, #EF4444)',
+                    animation: 'congratsBarFill 1s ease-out 0.8s both',
+                  }}
+                />
+              </div>
+              <div className={`flex justify-between mt-1 text-[10px] font-medium ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                <span>Day {streakInfo?.currentStreak || 1}</span>
+                <span>30 day goal</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCongrats(false)}
+              className={`mt-1 text-xs font-medium px-5 py-1.5 rounded-full transition-all duration-200 ${
+                isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+              }`}
+              style={{ animation: 'congratsFadeUp 0.5s ease-out 0.75s both' }}
+            >
+              Keep Going →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Extra Solve Congratulations Overlay */}
+      {showCongrats && congratsType === 'extra' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style={{ animation: 'congratsFadeIn 0.3s ease-out' }}>
           <div
             className={`pointer-events-auto flex flex-col items-center gap-3 px-8 py-6 rounded-2xl shadow-2xl border backdrop-blur-sm ${
               isDark
                 ? 'bg-gray-800/95 border-emerald-500/30 shadow-emerald-500/10'
                 : 'bg-white/95 border-emerald-300 shadow-emerald-200/40'
             }`}
-            style={{ animation: 'congratsBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            style={{ animation: 'congratsScaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
-            <div
-              className="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100"
-              style={{ animation: 'congratsSpin 0.6s ease-out' }}
-            >
-              <svg className="w-9 h-9 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-              </svg>
+            {/* Checkmark with ripple */}
+            <div className="relative">
+              <div
+                className={`flex items-center justify-center w-16 h-16 rounded-full ${isDark ? 'bg-emerald-500/15' : 'bg-emerald-100'}`}
+                style={{ animation: 'congratsIconSpin 0.6s ease-out' }}
+              >
+                <svg className="w-9 h-9 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                </svg>
+              </div>
+              {/* Ripple rings */}
+              <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30" style={{ animation: 'congratsRipple 1.2s ease-out 0.3s both' }} />
+              <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20" style={{ animation: 'congratsRipple 1.2s ease-out 0.5s both' }} />
             </div>
             <div className="text-center">
               <h2 className={`text-lg font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}
                 style={{ animation: 'congratsFadeUp 0.5s ease-out 0.2s both' }}
               >
-                Congratulations!!
+                Well Done! 🎯
               </h2>
               <p className={`text-sm mt-1 max-w-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
                 style={{ animation: 'congratsFadeUp 0.5s ease-out 0.35s both' }}
               >
-                You have solved one question. Try to solve more problems.
+                {streakInfo?.todaySolveCount > 1
+                  ? `${streakInfo.todaySolveCount} problems solved today! You're on fire!`
+                  : 'Great job solving this problem. Keep the momentum going!'}
               </p>
             </div>
             <button
               onClick={() => setShowCongrats(false)}
-              className={`mt-1 text-xs font-medium px-4 py-1.5 rounded-lg transition-colors ${
-                isDark ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-500 hover:bg-gray-100'
+              className={`mt-1 text-xs font-medium px-5 py-1.5 rounded-full transition-all duration-200 ${
+                isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
+              style={{ animation: 'congratsFadeUp 0.5s ease-out 0.45s both' }}
             >
-              Dismiss
+              Solve More →
             </button>
           </div>
         </div>
       )}
 
       <style>{`
-        @keyframes fadeIn {
+        @keyframes congratsFadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        @keyframes congratsBounce {
-          0% { opacity: 0; transform: scale(0.3) translateY(40px); }
-          50% { opacity: 1; transform: scale(1.05) translateY(-5px); }
+        @keyframes congratsScaleIn {
+          0% { opacity: 0; transform: scale(0.3) translateY(30px); }
+          50% { opacity: 1; transform: scale(1.04) translateY(-4px); }
           100% { transform: scale(1) translateY(0); }
         }
-        @keyframes congratsSpin {
+        @keyframes congratsIconSpin {
           0% { transform: rotate(-180deg) scale(0); }
           100% { transform: rotate(0deg) scale(1); }
         }
         @keyframes congratsFadeUp {
-          from { opacity: 0; transform: translateY(8px); }
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes congratsFireBounce {
+          0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+          50% { transform: scale(1.3) rotate(5deg); }
+          100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes congratsFirePulse {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.2); }
+          50% { transform: scale(1.05); box-shadow: 0 0 20px 5px rgba(245,158,11,0.15); }
+        }
+        @keyframes congratsPulseGlow {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        @keyframes congratsBarFill {
+          from { width: 0%; }
+        }
+        @keyframes congratsParticle {
+          0% { opacity: 1; transform: translateY(0) scale(1); }
+          100% { opacity: 0; transform: translateY(-80px) scale(0); }
+        }
+        @keyframes congratsRipple {
+          0% { transform: scale(1); opacity: 0.6; }
+          100% { transform: scale(1.8); opacity: 0; }
         }
       `}</style>
 
@@ -691,6 +830,10 @@ const CodingWorkspace = () => {
       )}
 
       <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
         @keyframes sidebarSlideIn {
           from { transform: translateX(-100%); }
           to { transform: translateX(0); }

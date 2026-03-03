@@ -1,42 +1,13 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
+import { useUser } from "../../utils/UserContext/UserContext";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 import colors from "../../utils/color";
-import { getModules } from "../../utils/BackendCalls/authService";
 
 const Modules = () => {
-    const [modules, setModules] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { modules, modulesLoading: loading, modulesError: error } = useUser();
     const { isDark } = useTheme();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchModules = async () => {
-            try {
-                const response = await getModules();
-                console.log('API Response:', response); // Debug log
-                
-                // Extract modules array from the response
-                let modulesArray = [];
-                if (response && response.data && Array.isArray(response.data)) {
-                    modulesArray = response.data;
-                } else if (Array.isArray(response)) {
-                    modulesArray = response;
-                }
-                
-                setModules(modulesArray);
-            } catch (err) {
-                console.error('Error fetching modules:', err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchModules();
-    }, []);
 
     if (loading) {
         return <SkeletonLoader variant="modules" />;
