@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://js-frontend-ten.vercel.app/sitemap.xml
