@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+/* Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #131212 #a6a7a9;
+}

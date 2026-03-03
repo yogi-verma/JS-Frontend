@@ -25,19 +25,17 @@ const Dashboard = () => {
             
             <Section />
 
-            <JavascriptInterviewQuestionsButton />
-
-            
             <Modules />
 
+            <JavascriptMachineCodingButton />
+
+            <JavascriptInterviewQuestionsButton />
+
+            <FrontendQuestionBundleButton />
 
             <JavascriptCompilerButton />
 
             <Reason />
-
-            <FrontendQuestionBundleButton />
-
-            <JavascriptMachineCodingButton />
 
             <Footer />
 

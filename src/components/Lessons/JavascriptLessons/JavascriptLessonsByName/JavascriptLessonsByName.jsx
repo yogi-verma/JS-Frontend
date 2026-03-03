@@ -2,13 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../../../utils/WhiteDarkMode/useTheme";
 import SkeletonLoader from "../../../../utils/SkeletonLoader/SkeletonLoader";
-import { getLessonById } from "../../../../utils/BackendCalls/authService";
+import { useUser } from "../../../../utils/UserContext/UserContext";
 import Header from "../../../Header/Header";
 
 const JavascriptLessonsByName = () => {
-    const [lesson, setLesson] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { lessonCache, fetchLesson } = useUser();
     const [selectedConceptIndex, setSelectedConceptIndex] = useState(0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { isDark } = useTheme();
@@ -16,28 +14,20 @@ const JavascriptLessonsByName = () => {
     const navigate = useNavigate();
     const contentTopRef = useRef(null);
 
-    useEffect(() => {
-        const fetchLesson = async () => {
-            try {
-                const response = await getLessonById(lessonId);
-                console.log('Lesson Response:', response);
-                
-                if (response && response.data) {
-                    setLesson(response.data);
-                } else if (response && !response.data) {
-                    setLesson(response);
-                }
-            } catch (err) {
-                console.error('Error fetching lesson:', err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const cached = lessonCache[lessonId] || {};
+    const lesson = cached.lesson || null;
+    const loading = cached.loading !== false;
+    const error = cached.error || null;
 
+    useEffect(() => {
         if (lessonId) {
-            fetchLesson();
+            fetchLesson(lessonId);
         }
+    }, [lessonId, fetchLesson]);
+
+    // Scroll to top when component opens or lesson changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
     }, [lessonId]);
 
     // Scroll to top when concept changes

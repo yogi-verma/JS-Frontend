@@ -927,3 +927,85 @@ export const getUserCodingStats = async () => {
         throw err;
     }
 };
+
+// ═══════════════════════════════════════════════════
+// Streak & Calendar API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Get the user's current streak summary
+ * @returns {Promise<Object>} { currentStreak, longestStreak, totalActiveDays, isActiveToday, todaySolveCount }
+ */
+export const getUserStreak = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/streak`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { currentStreak: 0, longestStreak: 0, totalActiveDays: 0, isActiveToday: false, todaySolveCount: 0 } };
+            throw new Error(`Failed to fetch streak: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching streak:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get calendar heatmap data for a specific year (and optional month)
+ * @param {number} year - The year
+ * @param {number} [month] - Optional month (1-12)
+ * @returns {Promise<Object>} { activeDays: { "YYYY-MM-DD": count }, totalActive }
+ */
+export const getStreakCalendar = async (year, month) => {
+    try {
+        const params = new URLSearchParams({ year });
+        if (month) params.append('month', month);
+
+        const res = await fetch(`${BACKEND_URL}/api/streak/calendar?${params}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { activeDays: {}, totalActive: 0 } };
+            throw new Error(`Failed to fetch streak calendar: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching streak calendar:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get full activity history for heatmap (last N days)
+ * @param {number} [days=365] - Number of days to look back
+ * @returns {Promise<Object>} { activeDays, currentStreak, longestStreak, totalActiveDays, dateRange }
+ */
+export const getStreakHistory = async (days = 365) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/streak/history?days=${days}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { activeDays: {}, currentStreak: 0, longestStreak: 0, totalActiveDays: 0 } };
+            throw new Error(`Failed to fetch streak history: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching streak history:', err);
+        throw err;
+    }
+};

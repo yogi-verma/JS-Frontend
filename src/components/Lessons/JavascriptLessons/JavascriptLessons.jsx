@@ -1,44 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../../utils/WhiteDarkMode/useTheme";
 import SkeletonLoader from "../../../utils/SkeletonLoader/SkeletonLoader";
-import { getLessonsByModule } from "../../../utils/BackendCalls/authService";
+import { useUser } from "../../../utils/UserContext/UserContext";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 
 const JavascriptLessons = () => {
-    const [lessons, setLessons] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { lessonsCache, fetchLessonsByModule } = useUser();
     const { isDark } = useTheme();
     const { moduleId } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchLessons = async () => {
-            try {
-                const response = await getLessonsByModule(moduleId);
-                console.log('Lessons Response:', response);
-                
-                let lessonsArray = [];
-                if (response && response.data && Array.isArray(response.data)) {
-                    lessonsArray = response.data;
-                } else if (Array.isArray(response)) {
-                    lessonsArray = response;
-                }
-                
-                setLessons(lessonsArray);
-            } catch (err) {
-                console.error('Error fetching lessons:', err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const cached = lessonsCache[moduleId] || {};
+    const lessons = cached.lessons || [];
+    const loading = cached.loading !== false; // true if loading or not yet fetched
+    const error = cached.error || null;
 
+    useEffect(() => {
         if (moduleId) {
-            fetchLessons();
+            fetchLessonsByModule(moduleId);
         }
+    }, [moduleId, fetchLessonsByModule]);
+
+    // Scroll to top when component opens or module changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
     }, [moduleId]);
 
     const getDifficultyConfig = (difficulty) => {
