@@ -300,19 +300,26 @@ const ProgressAnalytics = ({ isDark }) => {
     const fetchStats = async () => {
       try {
         const [
-          interviewStats,
-          interviewProgress,
-          frontendStats,
-          frontendProgress,
-          codingStats,
+          [
+            interviewStats,
+            interviewProgress,
+            frontendStats,
+            frontendProgress,
+            codingStats,
+          ],
           quizRes,
         ] = await Promise.all([
-          getInterviewQuestionsStats(),
-          getUserInterviewProgress(),
-          getFrontendQuestionsStats(),
-          getUserFrontendProgress(),
-          getUserCodingStats(),
-          getDailyQuizQuestions(),
+          Promise.all([
+            getInterviewQuestionsStats(),
+            getUserInterviewProgress(),
+            getFrontendQuestionsStats(),
+            getUserFrontendProgress(),
+            getUserCodingStats(),
+          ]),
+          getDailyQuizQuestions().catch(err => {
+            console.error('Quiz fetch failed:', err);
+            return null;
+          }),
         ]);
 
         // Progress stats
@@ -323,7 +330,9 @@ const ProgressAnalytics = ({ isDark }) => {
         });
 
         // Quiz status
-        if (quizRes?.success) {
+        if (!quizRes) {
+          setQuizStatus("error");
+        } else if (quizRes?.success) {
           if (quizRes.data?.alreadyCompleted) {
             setQuizData(quizRes.data);
             setQuizStatus("completed");

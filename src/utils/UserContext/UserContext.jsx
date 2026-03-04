@@ -238,7 +238,7 @@ export const UserProvider = ({ children }) => {
             if (dismissedDate === today) return;
 
             const res = await checkDailyQuizEligibility();
-            if (res.data?.canAttempt) {
+            if (res.data?.canAttempt || res.data?.completed === false) {
                 setShowDailyQuiz(true);
             }
         } catch (err) {
