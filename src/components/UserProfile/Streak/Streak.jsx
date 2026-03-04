@@ -152,7 +152,7 @@ const MiniMonth = ({ year, month, activeDays, isDark }) => {
               />
               {/* Tooltip */}
               <div
-                className={`absolute z-30 bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity ${
+                className={`absolute z-30 bottom-full left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity ${
                   isDark
                     ? "bg-gray-700 text-gray-200"
                     : "bg-gray-800 text-white"

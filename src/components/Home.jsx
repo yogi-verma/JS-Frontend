@@ -8,8 +8,7 @@ import Section from "./Section/Section";
 import Footer from "./Footer/Footer";
 import Reason from "./Reason/Reason";
 import SpecialButton from "./SpecialButton/SpecialButton";
-import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
-import FrontendQuestionBundleButton from "./FrontendQuestionsBundle/FrontendQuestionBundleButton";
+import LearningCards from "./LearningCards/LearningCards";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -32,11 +31,9 @@ const Home = () => {
                 onLoginClick={initializeGoogleLogin}
             />
 
-            <JavascriptInterviewQuestionsButton onLearnMoreClick={initializeGoogleLogin} />
+            <LearningCards onLoginRequired={initializeGoogleLogin} />
 
             <Reason />
-
-            <FrontendQuestionBundleButton />
 
             <SpecialButton />
 
