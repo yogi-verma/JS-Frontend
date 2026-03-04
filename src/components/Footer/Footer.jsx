@@ -11,7 +11,7 @@ const Footer = () => {
 			style={{ background, borderColor }}
 			className={`mt-12 border-t ${isDark ? 'text-gray-200' : 'text-gray-800'}`}
 		>
-			<div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
 				<p className="text-sm">@DevCrux all right reserved</p>
 				<p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
 					Made with 💙 by Yogesh Verma

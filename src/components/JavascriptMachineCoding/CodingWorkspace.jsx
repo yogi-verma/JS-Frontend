@@ -389,7 +389,7 @@ const CodingWorkspace = () => {
   if (error || !question) {
     return (
       <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-        <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className={`rounded-lg p-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-red-50 border-red-200'}`}>
             <p className={`font-semibold ${isDark ? 'text-red-400' : 'text-red-600'}`}>Failed to load question</p>
             <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{error || 'Question not found'}</p>
@@ -544,7 +544,7 @@ const CodingWorkspace = () => {
                 style={{ animation: 'congratsFadeUp 0.5s ease-out 0.35s both' }}
               >
                 {streakInfo?.todaySolveCount > 1
-                  ? `${streakInfo.todaySolveCount} problems solved today! You're on fire!`
+                  ? `${streakInfo.todaySolveCount} submissions today! You're on fire!`
                   : 'Great job solving this problem. Keep the momentum going!'}
               </p>
             </div>
@@ -1641,7 +1641,16 @@ const SubmissionCard = ({ submission, isDark, onLoadCode }) => {
 // ─── Solution Card Sub-Component with reveal toggle ───
 const SolutionCard = ({ solution, index, isDark }) => {
   const [revealed, setRevealed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const colors = SYNTAX_COLORS[isDark ? 'dark' : 'light'];
+
+  const handleCopy = async (code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* fallback */ }
+  };
 
   const approachColors = {
     0: { bg: isDark ? 'bg-blue-900/20' : 'bg-blue-50', border: isDark ? 'border-blue-800/40' : 'border-blue-200', badge: isDark ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-700', text: isDark ? 'text-blue-400' : 'text-blue-600' },
@@ -1676,7 +1685,34 @@ const SolutionCard = ({ solution, index, isDark }) => {
           {/* Code */}
           {solution.code && (
             <div>
-              <h4 className={`text-[10px] font-semibold uppercase tracking-wider mb-1.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Code</h4>
+              <div className="flex items-center justify-between mb-1.5">
+                <h4 className={`text-[10px] font-semibold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Code</h4>
+                <button
+                  onClick={() => handleCopy(solution.code)}
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium transition-all duration-200 ${
+                    copied
+                      ? (isDark ? 'text-emerald-400 bg-emerald-900/30' : 'text-emerald-600 bg-emerald-50')
+                      : (isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/60')
+                  }`}
+                  title={copied ? 'Copied!' : 'Copy code'}
+                >
+                  {copied ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                      </svg>
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
               <pre className={`p-3 rounded-lg text-xs font-mono overflow-x-auto ${isDark ? 'bg-[#011627]' : 'bg-gray-100'}`} style={{ lineHeight: '1.6' }}>
                 <code>
                   {tokenize(solution.code).map((token, j) => (

@@ -409,19 +409,16 @@ const Streak = ({ isDark }) => {
     ))}
   </div>
 ) : (
-  <div className="overflow-x-auto custom-scrollbar">
-    <div className="flex gap-6 min-w-max">
-      {Array.from({ length: 12 }, (_, i) => (
-        <div key={i} className="min-w-[100px]">
-          <MiniMonth
-            year={viewYear}
-            month={i + 1}
-            activeDays={calendarData}
-            isDark={isDark}
-          />
-        </div>
-      ))}
-    </div>
+  <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+    {Array.from({ length: 12 }, (_, i) => (
+      <MiniMonth
+        key={i}
+        year={viewYear}
+        month={i + 1}
+        activeDays={calendarData}
+        isDark={isDark}
+      />
+    ))}
   </div>
 )}
       </div>

@@ -75,7 +75,7 @@ const JavascriptLessons = () => {
 
     if (error) {
         return (
-            <div className={`min-h-screen py-12 px-6 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+            <div className={`min-h-screen py-12 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
                 <div className="max-w-4xl mx-auto">
                     <div className={`rounded-2xl p-8 border ${isDark ? 'bg-gray-900 border-red-500/20' : 'bg-white border-red-200'} shadow-lg`}>
                         <div className="flex items-start gap-4">

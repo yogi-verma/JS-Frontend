@@ -36,10 +36,10 @@ const FrontendQuestionBundleButton = () => {
   ];
 
   return (
-    <section className="px-4 sm:px-6 my-6 sm:my-8">
+    <section className="px-4 sm:px-6 lg:px-8 my-6 sm:my-8">
       <div
         onClick={() => navigate('/dashboard/frontend-interview-questions')}
-        className="mx-auto max-w-6xl rounded-2xl relative overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.01] active:scale-[0.995]"
+        className="mx-auto max-w-7xl rounded-2xl relative overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.01] active:scale-[0.995]"
         style={{
           fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif',

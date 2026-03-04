@@ -198,7 +198,7 @@ const FrontendQuestionBundle = () => {
     return (
       <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
         <Header />
-        <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className={`rounded-lg p-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-red-50 border-red-200'}`}>
             <p className={`font-semibold ${isDark ? 'text-red-400' : 'text-red-600'}`}>Failed to load questions</p>
             <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{error}</p>
@@ -215,7 +215,7 @@ const FrontendQuestionBundle = () => {
       <main className="flex-grow">
         {/* Hero Section */}
         <div className={`border-b ${isDark ? 'bg-gray-800/50 border-gray-800' : 'bg-white border-gray-200'}`}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -394,7 +394,7 @@ const FrontendQuestionBundle = () => {
         </div>
 
         {/* Content Area */}
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
 
           {/* No category selected — show category grid */}
           {!selectedCategory && (

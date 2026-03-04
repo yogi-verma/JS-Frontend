@@ -1,5 +1,5 @@
 // Backend API calls for authentication
-const BACKEND_URL = 'https://js-backend-olive.vercel.app'; // Change to your backend URL in production
+const BACKEND_URL = 'http://localhost:5000'; // Change to your backend URL in production
 
 // Backend URL = https://js-backend-olive.vercel.app/
 
@@ -1133,6 +1133,58 @@ export const getQuizHistory = async (limit = 30) => {
         return await res.json();
     } catch (err) {
         console.error('Error fetching quiz history:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get quiz attempt for a specific date
+ * @param {string} date - Date string in YYYY-MM-DD format
+ * @returns {Promise<Object>} { attempted, quizDate, score?, totalQuestions?, completedAt?, results? }
+ */
+export const getQuizByDate = async (date) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/date/${date}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch quiz for date ${date}: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching quiz by date:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get a calendar map of all quiz attempts for a given year/month
+ * @param {number} year - e.g. 2026
+ * @param {number} [month] - Optional 1-12
+ * @returns {Promise<Object>} { "YYYY-MM-DD": { score, totalQuestions, completedAt } }
+ */
+export const getQuizCalendar = async (year, month) => {
+    try {
+        const params = new URLSearchParams({ year });
+        if (month) params.append('month', month);
+
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/calendar?${params}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch quiz calendar: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching quiz calendar:', err);
         throw err;
     }
 };
