@@ -1009,3 +1009,130 @@ export const getStreakHistory = async (days = 365) => {
         throw err;
     }
 };
+
+// ═══════════════════════════════════════════════════
+// Daily Quiz API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Check if user can attempt daily quiz (eligibility check)
+ * @returns {Promise<Object>} { canAttempt, hasAttemptedToday, hoursUntilNext, message }
+ */
+export const checkDailyQuizEligibility = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/eligibility`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { canAttempt: false, hasAttemptedToday: true, message: 'Please login to attempt quiz' } };
+            throw new Error(`Failed to check quiz eligibility: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error checking quiz eligibility:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get daily quiz questions
+ * @returns {Promise<Object>} { questions, totalQuestions, attemptDate }
+ */
+export const getDailyQuizQuestions = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/questions`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch quiz questions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching daily quiz questions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Submit daily quiz answers
+ * @param {Array} answers - Array of { questionId, selectedOption }
+ * @param {number} timeTaken - Time taken in seconds
+ * @returns {Promise<Object>} { score, correctCount, incorrectCount, answers, nextQuizAt }
+ */
+export const submitDailyQuiz = async (answers, timeTaken) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ answers, timeTaken }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || `Failed to submit quiz: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error submitting daily quiz:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get today's quiz results (if already attempted)
+ * @returns {Promise<Object>} Quiz results with score, answers, explanations
+ */
+export const getTodayQuizResults = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/results`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 404) return { success: false, message: 'No quiz attempt found for today' };
+            throw new Error(`Failed to fetch quiz results: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching today quiz results:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get user's quiz history
+ * @param {number} [limit=30] - Number of attempts to return
+ * @returns {Promise<Object>} { history, statistics }
+ */
+export const getQuizHistory = async (limit = 30) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/history?limit=${limit}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { history: [], statistics: {} } };
+            throw new Error(`Failed to fetch quiz history: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching quiz history:', err);
+        throw err;
+    }
+};

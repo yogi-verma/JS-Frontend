@@ -7,12 +7,11 @@ import Modules from "./Modules/Modules";
 import SkeletonLoader from "../utils/SkeletonLoader/SkeletonLoader";
 import Footer from "./Footer/Footer";
 import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptCompilerButton";
-import JavascriptInterviewQuestionsButton from "./JavascriptInterviewQuestions/JavascriptInterviewQuestionsButton";
-import FrontendQuestionBundleButton from "./FrontendQuestionsBundle/FrontendQuestionBundleButton";
-import JavascriptMachineCodingButton from "./JavascriptMachineCoding/JavascriptMachineCodingButton";
+import LearningCards from "./LearningCards/LearningCards";
+import DailyQuiz from "./DailyQuiz/DailyQuiz";
 
 const Dashboard = () => {
-    const { loading } = useUser();
+    const { loading, showDailyQuiz } = useUser();
     const { isDark } = useTheme();
 
     if (loading) {
@@ -27,11 +26,7 @@ const Dashboard = () => {
 
             <Modules />
 
-            <JavascriptMachineCodingButton />
-
-            <JavascriptInterviewQuestionsButton />
-
-            <FrontendQuestionBundleButton />
+            <LearningCards />
 
             <JavascriptCompilerButton />
 
@@ -39,6 +34,8 @@ const Dashboard = () => {
 
             <Footer />
 
+            {/* Daily Quiz popup — rendered on top of everything */}
+            {showDailyQuiz && <DailyQuiz />}
         </div>
     );
 };

@@ -138,7 +138,7 @@ const FrontendQuestionBundleButton = () => {
                 }}
               >
                 <span className="text-sm font-bold text-white whitespace-nowrap">
-                  {isAuthenticated ? "Let's Explore" : "Login to Explore"}
+                  {isAuthenticated ? "Let's Explore" : "Let's Explore"}
                 </span>
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />

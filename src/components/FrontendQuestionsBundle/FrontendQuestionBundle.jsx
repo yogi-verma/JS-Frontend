@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
@@ -9,6 +10,7 @@ import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 const FrontendQuestionBundle = () => {
   const { isDark } = useTheme();
   const { isAuthenticated } = useUser();
+  const navigate = useNavigate();
 
   const [stats, setStats] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -216,14 +218,27 @@ const FrontendQuestionBundle = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2.5 mb-2">
+                <div className="flex items-center gap-3 mb-2">
+                  <button
+                    onClick={() => navigate(-1)}
+                    className={`p-2 rounded-lg transition-all duration-200 group ${
+                      isDark
+                        ? 'hover:bg-gray-700/50 text-gray-400 hover:text-gray-200'
+                        : 'hover:bg-gray-200/70 text-gray-500 hover:text-gray-700'
+                    }`}
+                    aria-label="Go back"
+                  >
+                    <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                  </button>
                   <div className={`p-2 rounded-lg ${isDark ? 'bg-purple-900/40' : 'bg-purple-100'}`}>
                     <svg className={`w-5 h-5 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                   </div>
                   <h1 className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    Frontend Developer Question Bank
+                    Frontend Interview Questions
                   </h1>
                 </div>
                 <p className={`text-sm max-w-xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>

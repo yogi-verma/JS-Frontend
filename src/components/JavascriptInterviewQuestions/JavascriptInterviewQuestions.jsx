@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
@@ -9,6 +10,7 @@ import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 const JavascriptInterviewQuestions = () => {
   const { isDark } = useTheme();
   const { isAuthenticated } = useUser();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -172,7 +174,20 @@ const JavascriptInterviewQuestions = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2.5 mb-2">
+                <div className="flex items-center gap-3 mb-2">
+                  <button
+                    onClick={() => navigate(-1)}
+                    className={`p-2 rounded-lg transition-all duration-200 group ${
+                      isDark
+                        ? 'hover:bg-gray-700/50 text-gray-400 hover:text-gray-200'
+                        : 'hover:bg-gray-200/70 text-gray-500 hover:text-gray-700'
+                    }`}
+                    aria-label="Go back"
+                  >
+                    <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                  </button>
                   <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-900/40' : 'bg-blue-100'}`}>
                     <svg className={`w-5 h-5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />

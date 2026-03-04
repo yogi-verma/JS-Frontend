@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { getCurrentUser, getUserStreak, getModules, getLessonsByModule, getLessonById } from '../BackendCalls/authService';
+import { getCurrentUser, getUserStreak, getModules, getLessonsByModule, getLessonById, checkDailyQuizEligibility } from '../BackendCalls/authService';
+
 
 const UserContext = createContext();
 
@@ -19,6 +20,9 @@ export const UserProvider = ({ children }) => {
     const [modules, setModules] = useState([]);
     const [modulesLoading, setModulesLoading] = useState(true);
     const [modulesError, setModulesError] = useState(null);
+
+    // Daily Quiz - Just show/hide control
+    const [showDailyQuiz, setShowDailyQuiz] = useState(false);
 
     // Lessons cache: { [moduleId]: { lessons, loading, error } }
     const [lessonsCache, setLessonsCache] = useState({});
@@ -211,14 +215,47 @@ export const UserProvider = ({ children }) => {
         setIsAuthenticated(true);
         localStorage.setItem('currentUser', JSON.stringify(userData));
         localStorage.setItem('isAuthenticated', 'true');
+        // Check quiz eligibility after login
+        setTimeout(() => checkAndShowQuiz(), 1000);
     };
 
     const logout = () => {
         setUser(null);
         setIsAuthenticated(false);
+        setShowDailyQuiz(false);
         localStorage.removeItem('currentUser');
         localStorage.setItem('isAuthenticated', 'false');
     };
+
+    // Check quiz eligibility and show modal if available.
+    // Respects a "dismissed today" flag stored in localStorage so the popup
+    // doesn't keep re-appearing after the user cancels it.
+    const checkAndShowQuiz = useCallback(async () => {
+        try {
+            // If the user already dismissed the quiz today, stay silent
+            const today = new Date().toISOString().split('T')[0];
+            const dismissedDate = localStorage.getItem('dailyQuizDismissedDate');
+            if (dismissedDate === today) return;
+
+            const res = await checkDailyQuizEligibility();
+            if (res.data?.canAttempt) {
+                setShowDailyQuiz(true);
+            }
+        } catch (err) {
+            console.error('Error checking quiz eligibility:', err);
+        }
+    }, []);
+
+    // Check quiz eligibility when user becomes authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            // Small delay to let the dashboard load first
+            const timer = setTimeout(() => {
+                checkAndShowQuiz();
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [isAuthenticated, checkAndShowQuiz]);
 
     const value = {
         user,
@@ -236,7 +273,10 @@ export const UserProvider = ({ children }) => {
         lessonsCache,
         fetchLessonsByModule,
         lessonCache,
-        fetchLesson
+        fetchLesson,
+        // Daily Quiz - just expose control functions
+        showDailyQuiz,
+        setShowDailyQuiz
     };
 
     return (

@@ -17,6 +17,7 @@ import DisplaySocialLinks from "./DisplaySocialLinks/DisplaySocialLinks";
 import DisplayAccountInformation from "./DisplayAccountInformation/DisplayAccountInformation";
 import ProgressAnalytics from "./ProgressAnalytics/ProgressAnalytics";
 import Streak from "./Streak/Streak";
+import DailyQuiz from "../DailyQuiz/DailyQuiz";
 
 /* ─── Reusable card wrapper ─── */
 const ProfileCard = ({ icon, title, iconColor, isDark, children }) => {
@@ -55,7 +56,7 @@ const ProfileCard = ({ icon, title, iconColor, isDark, children }) => {
 };
 
 const UserProfile = () => {
-  const { user } = useUser();
+  const { user, showDailyQuiz } = useUser();
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const [, setForceRender] = useState(0);
@@ -173,7 +174,7 @@ const UserProfile = () => {
                   getInitials={getInitials}
                 />
                 {/* Name & handle */}
-                <div className="mt-3 w-full">
+                <div className="mt-2 w-full">
                   <h1
                     className={`text-lg font-bold leading-snug ${
                       isDark ? "text-gray-100" : "text-gray-900"
@@ -181,13 +182,6 @@ const UserProfile = () => {
                   >
                     {user.displayName || "User"}
                   </h1>
-                  <p
-                    className={`text-xs font-normal mt-0.5 ${
-                      isDark ? "text-gray-500" : "text-gray-400"
-                    }`}
-                  >
-                    @{user.email?.split("@")[0]}
-                  </p>
                 </div>
                 {/* Bio */}
                 <div className="mt-2 w-full">
@@ -227,7 +221,7 @@ const UserProfile = () => {
           </ProfileCard>
         </div>
 
-        {/* ============ ROW 2 — Personal + Professional ============ */}
+        {/* ============ ROW 2 - Personal + Professional ============ */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
           {/* Personal Information Card */}
           <ProfileCard
@@ -277,7 +271,7 @@ const UserProfile = () => {
           </ProfileCard>
         </div>
 
-        {/* ============ ROW 3 — Social + Account ============ */}
+        {/* ============ ROW 3 - Social + Account ============ */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 mb-2">
           {/* Social Media Links Card */}
           <ProfileCard
@@ -401,6 +395,9 @@ const UserProfile = () => {
       </main>
 
       <Footer />
+
+      {/* Daily Quiz popup — rendered here so it works when navigating directly to /profile */}
+      {showDailyQuiz && <DailyQuiz />}
     </div>
   );
 };
