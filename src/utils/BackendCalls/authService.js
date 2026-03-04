@@ -1020,7 +1020,7 @@ export const getStreakHistory = async (days = 365) => {
  */
 export const checkDailyQuizEligibility = async () => {
     try {
-        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/eligibility`, {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/status`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -1044,7 +1044,7 @@ export const checkDailyQuizEligibility = async () => {
  */
 export const getDailyQuizQuestions = async () => {
     try {
-        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/questions`, {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -1094,7 +1094,7 @@ export const submitDailyQuiz = async (answers, timeTaken) => {
  */
 export const getTodayQuizResults = async () => {
     try {
-        const res = await fetch(`${BACKEND_URL}/api/daily-quiz/results`, {
+        const res = await fetch(`${BACKEND_URL}/api/daily-quiz`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
