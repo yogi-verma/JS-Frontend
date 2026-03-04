@@ -11,9 +11,9 @@ const SpecialButton = () => {
   const subTextColor = isDark ? "#334155" : "#E2E8F0";
 
   return (
-    <section className="px-4 sm:px-6">
+    <section className="px-4 sm:px-6 lg:px-8">
       <div
-        className="mx-auto max-w-6xl rounded-2xl shadow-lg relative overflow-visible"
+        className="mx-auto max-w-7xl rounded-2xl shadow-lg relative overflow-visible"
         style={{ background }}
       >
         {/* New Badge */}

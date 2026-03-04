@@ -166,8 +166,8 @@ const JavascriptLessonsByName = () => {
         return (
             <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
                 <Header />
-                <div className="py-12 px-6">
-                    <div className="max-w-6xl mx-auto">
+                <div className="py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto">
                         <div 
                             className={`rounded-lg p-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-red-50 border-red-200'}`}
                         >
@@ -198,8 +198,8 @@ const JavascriptLessonsByName = () => {
         return (
             <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
                 <Header />
-                <div className="py-12 px-6">
-                    <div className="max-w-6xl mx-auto text-center">
+                <div className="py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto text-center">
                         <div className={`py-12 rounded-lg border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                             <span className="text-4xl mb-3 block">📭</span>
                             <p className={`text-base font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>

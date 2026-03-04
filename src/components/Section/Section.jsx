@@ -18,7 +18,7 @@ const Section = ({ showLoginButton = false, onLoginClick }) => {
         <section
             className={`relative overflow-hidden transition-colors duration-300 ${isDark ? "bg-slate-900/40" : "bg-slate-50/80"}`}
         >
-            <div className="max-w-6xl mx-auto px-6 py-10 sm:py-14 lg:py-5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-5">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     {/* Text block — left-aligned, wider to reduce paragraph wrapping */}
                     <div className="min-w-0 order-2 lg:order-1 lg:flex-none lg:min-w-[32rem] lg:max-w-[42rem] lg:mr-5">

@@ -108,8 +108,8 @@ const DashboardSkeleton = ({ isDark }) => (
 
 /* Modules — section title + 3-col card grid */
 const ModulesSkeleton = ({ isDark }) => (
-  <div className={`py-6 px-6 ${isDark ? "bg-gray-900" : "bg-white"}`}>
-    <div className="max-w-6xl mx-auto">
+  <div className={`py-6 px-4 sm:px-6 lg:px-8 ${isDark ? "bg-gray-900" : "bg-white"}`}>
+    <div className="max-w-7xl mx-auto">
       <div className="text-center mb-5">
         <Block className="h-8 w-52 mx-auto mb-2" />
         <Block className="h-4 w-64 mx-auto" />
@@ -267,7 +267,7 @@ const LessonDetailSkeleton = ({ isDark }) => (
 /* Hero + pills helper used by several variants */
 const HeroSkeleton = ({ isDark, pillCount = 4 }) => (
   <div className={`border-b ${isDark ? "bg-gray-800/50 border-gray-800" : "bg-white border-gray-200"}`}>
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5 mb-2">
@@ -304,7 +304,7 @@ const QuestionsListSkeleton = ({ isDark }) => (
       <HeroSkeleton isDark={isDark} pillCount={4} />
 
       {/* Search & Filter */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mt-5 flex flex-col sm:flex-row gap-3 mb-5">
           <Block className="flex-1 h-10 rounded-lg" />
           <Block className="h-10 w-56 rounded-lg" />
@@ -312,7 +312,7 @@ const QuestionsListSkeleton = ({ isDark }) => (
       </div>
 
       {/* Accordion rows */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <div className="space-y-3">
           {Array.from({ length: 8 }, (_, idx) => (
             <div
@@ -356,7 +356,7 @@ const CodingTableSkeleton = ({ isDark }) => (
 
       {/* Search & Filter */}
       <div className={`border-b ${isDark ? "bg-gray-800/50 border-gray-800" : "bg-white border-gray-200"}`}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-4 flex flex-col sm:flex-row gap-3">
             <Block className="flex-1 h-10 rounded-lg" />
             <Block className="h-10 w-56 rounded-lg" />
@@ -365,7 +365,7 @@ const CodingTableSkeleton = ({ isDark }) => (
       </div>
 
       {/* Table */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         {/* Table Header */}
         <div className={`hidden sm:grid grid-cols-[40px_1fr_100px_90px_70px] gap-3 px-4 py-2.5 rounded-t-lg ${isDark ? "bg-gray-800/80" : "bg-gray-100"}`}>
           {[24, 48, 64, 56, 40].map((w, i) => (
@@ -493,7 +493,7 @@ const FrontendBundleSkeleton = ({ isDark }) => (
     <main className="grow">
       {/* Hero */}
       <div className={`border-b ${isDark ? "bg-gray-800/50 border-gray-800" : "bg-white border-gray-200"}`}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2.5 mb-2">
@@ -511,7 +511,7 @@ const FrontendBundleSkeleton = ({ isDark }) => (
       </div>
 
       {/* Category dropdown + search */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <Block className="h-10 w-64 rounded-lg" />
           <Block className="flex-1 h-10 rounded-lg" />

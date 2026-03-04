@@ -47,7 +47,7 @@ const Reason = () => {
   const { isDark } = useTheme();
   return (
     <section
-      className={`text-center py-6 sm:py-7 md:py-8 lg:py-10 px-4 sm:px-6 md:px-8 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`text-center py-6 sm:py-7 md:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}
     >
       <h2 className={`text-3xl font-bold mb-3 ${colors.blueTextGradient}`}>
         Why learn FullStack here?
@@ -55,7 +55,7 @@ const Reason = () => {
       <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
         Real skills, real projects, real community. We go beyond the basics to make you a confident, job-ready developer.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mt-5 sm:mt-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mt-5 sm:mt-6 max-w-7xl mx-auto">
         {reasons.map((reason, idx) => (
           <div
             key={idx}

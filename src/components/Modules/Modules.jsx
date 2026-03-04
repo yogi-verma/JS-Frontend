@@ -15,7 +15,7 @@ const Modules = () => {
 
     if (error) {
         return (
-            <div className={`py-12 px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+            <div className={`py-12 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
                 <div className="max-w-4xl mx-auto">
                     <div 
                         className="rounded-lg p-6 border border-red-200 bg-red-50"
@@ -37,8 +37,8 @@ const Modules = () => {
     }
 
     return (
-        <div className={`py-6 px-6`}>
-            <div className="max-w-6xl mx-auto">
+        <div className={`py-6 px-4 sm:px-6 lg:px-8`}>
+            <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-5">
                     <h2 className={`text-3xl font-bold mb-2 ${colors.blueTextGradient}`}>
