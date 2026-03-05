@@ -9,6 +9,7 @@ import Footer from "./Footer/Footer";
 import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptCompilerButton";
 import LearningCards from "./LearningCards/LearningCards";
 import DailyQuiz from "./DailyQuiz/DailyQuiz";
+import DailyQuizStickyIcon from "./DailyQuiz/DailyQuizStickyIcon";
 
 const Dashboard = () => {
     const { loading, showDailyQuiz } = useUser();
@@ -33,6 +34,9 @@ const Dashboard = () => {
             <Reason />
 
             <Footer />
+
+            {/* Sticky quiz icon — always visible */}
+            <DailyQuizStickyIcon />
 
             {/* Daily Quiz popup — rendered on top of everything */}
             {showDailyQuiz && <DailyQuiz />}
