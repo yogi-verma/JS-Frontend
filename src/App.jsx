@@ -14,6 +14,7 @@ import FrontendQuestionBundleButton from './components/FrontendQuestionsBundle/F
 import FrontendQuestionBundle from './components/FrontendQuestionsBundle/FrontendQuestionBundle';
 import JavascriptMachineCoding from './components/JavascriptMachineCoding/JavascriptMachineCoding';
 import CodingWorkspace from './components/JavascriptMachineCoding/CodingWorkspace';
+import OutputBased from './components/OutputBased/OutputBased';
 
 function App() {
     return (
@@ -81,6 +82,14 @@ function App() {
                             } 
                         />
 
+                        <Route 
+                            path="/dashboard/output-based-questions" 
+                            element={
+                                <ProtectedRoute>
+                                    <OutputBased />
+                                </ProtectedRoute>
+                            } 
+                        />
                         <Route 
                             path="/dashboard/coding-questions" 
                             element={

@@ -94,6 +94,47 @@ const LearningCards = ({ onLoginRequired }) => {
       ctaText: "Start Practicing",
     },
     {
+      id: "output-based",
+      title: "Output-Based Questions",
+      description:
+        "Predict the output! MCQ-style JavaScript & React questions with detailed explanations.",
+      badge: { text: "Live Now", color: "violet", live: true },
+      secondBadge: { text: "New", color: "amber" },
+      features: [
+        "JavaScript & React",
+        "Predict the Output",
+        "MCQ with Explanations",
+        "All Difficulty Levels",
+      ],
+      difficulties: [
+        { label: "Easy", count: 5, color: "#10B981" },
+        { label: "Medium", count: 6, color: "#F59E0B" },
+      ],
+      gradient: {
+        dark: "linear-gradient(135deg, #1a0a2e 0%, #0f172a 50%, #164e63 100%)",
+        light: "linear-gradient(135deg, #7C3AED 0%, #6D28D9 40%, #0891B2 100%)",
+      },
+      glow: { primary: "#8B5CF6", secondary: "#06B6D4" },
+      buttonGradient: "linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)",
+      route: "/dashboard/output-based-questions",
+      icon: (
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+          />
+        </svg>
+      ),
+      ctaText: "Start Practicing",
+    },
+    {
       id: "frontend",
       title: "Frontend Interview Bundle",
       description:

@@ -1188,3 +1188,67 @@ export const getQuizCalendar = async (year, month) => {
         throw err;
     }
 };
+
+// ═══════════════════════════════════════════════════
+// Output-Based Questions API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Fetch all output-based questions (with optional filters)
+ * @param {Object} params - Query params: category, difficulty, page, limit
+ * @returns {Promise<Object>} Object containing questions array and pagination
+ */
+export const getOutputBasedQuestions = async (params = {}) => {
+    try {
+        const queryParams = new URLSearchParams(params).toString();
+        const res = await fetch(`${BACKEND_URL}/api/output-based-questions?${queryParams}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        if (!res.ok) throw new Error(`Failed to fetch output-based questions: ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching output-based questions:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch output-based questions by category
+ * @param {string} category - 'javascript' or 'react'
+ * @returns {Promise<Object>} Object containing questions array
+ */
+export const getOutputBasedQuestionsByCategory = async (category) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/output-based-questions/category/${category}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        if (!res.ok) throw new Error(`Failed to fetch output-based questions by category: ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching output-based questions by category:', err);
+        throw err;
+    }
+};
+
+/**
+ * Fetch output-based questions stats
+ * @returns {Promise<Object>} Stats object with totals by category and difficulty
+ */
+export const getOutputBasedQuestionsStats = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/output-based-questions/stats`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        if (!res.ok) throw new Error(`Failed to fetch output-based questions stats: ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching output-based questions stats:', err);
+        throw err;
+    }
+};
