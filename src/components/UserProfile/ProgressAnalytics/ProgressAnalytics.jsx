@@ -45,6 +45,7 @@ const CircularProgress = ({ percentage, size = 80, strokeWidth = 6, color }) => 
 };
 
 /* ─── Report card ─── */
+// eslint-disable-next-line no-unused-vars
 const ReportCard = ({ icon: Icon, title, completed, total, percentage, color, link, isDark }) => (
   <Link
     to={link}

@@ -31,7 +31,7 @@ const Sidebar = ({ activeTab, setActiveTab, isDark }) => {
 
       {/* Links */}
       <div className="p-2 flex flex-col gap-0.5">
-        {tabs.map(({ key, label, icon: Icon }) => {
+        {tabs.map(({ key, label, icon: Icon }) => { // eslint-disable-line no-unused-vars
           const isActive = activeTab === key;
           return (
             <button

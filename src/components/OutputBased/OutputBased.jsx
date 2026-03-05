@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
-import { useUser } from "../../utils/UserContext/UserContext";
 import {
   getOutputBasedQuestions,
   getOutputBasedQuestionsStats,
@@ -137,7 +136,6 @@ const OptionButton = ({
   const letter = ["A", "B", "C", "D"][index];
   const isCorrect = revealed && index === correct;
   const isWrong = revealed && selected === index && index !== correct;
-  const isNeutral = revealed && !isCorrect && !isWrong;
 
   let borderClasses, bgClasses, letterBg, letterText;
 
@@ -409,11 +407,10 @@ const QuestionCard = ({ question, index, isDark }) => {
 
 const OutputBased = () => {
   const { isDark } = useTheme();
-  const { isAuthenticated } = useUser();
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState([]);
-  const [stats, setStats] = useState(null);
+  const [, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -423,9 +420,6 @@ const OutputBased = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 8;
-
-  // Score tracking
-  const [scoreMap, setScoreMap] = useState({});
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

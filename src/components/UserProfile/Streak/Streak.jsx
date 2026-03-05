@@ -49,6 +49,7 @@ const getIntensityColor = (count, isDark) => {
 };
 
 /* ─── Stat badge ─── */
+// eslint-disable-next-line no-unused-vars
 const StatBadge = ({ icon: Icon, label, value, color, isDark }) => (
   <div
     className="flex items-center gap-2 rounded-lg px-3 py-2 transition-colors"

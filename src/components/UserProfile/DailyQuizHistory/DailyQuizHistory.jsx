@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight, FiX, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { getQuizCalendar, getQuizByDate } from "../../../utils/BackendCalls/authService";
 
@@ -67,7 +67,7 @@ const ScoreRing = ({ score, total, size = 64 }) => {
 };
 
 // ─── Quiz result item (expandable) ───────────────────────────────────────────
-const ResultItem = ({ result, index, isDark }) => {
+const ResultItem = ({ result, isDark }) => {
   const [open, setOpen] = useState(false);
   const { question, options, correctIndex, selectedIndex, isCorrect, explanation, category, questionType } = result;
 
