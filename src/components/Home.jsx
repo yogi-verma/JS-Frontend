@@ -9,6 +9,7 @@ import Footer from "./Footer/Footer";
 import Reason from "./Reason/Reason";
 import SpecialButton from "./SpecialButton/SpecialButton";
 import LearningCards from "./LearningCards/LearningCards";
+import OutputBasedPromoStrip from "./FeatureLaunchBanner/OutputBasedPromoStrip";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -25,6 +26,8 @@ const Home = () => {
     return (
         <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
             <Header />
+
+            <OutputBasedPromoStrip onLoginRequired={initializeGoogleLogin} />
 
             <Section
                 showLoginButton={!isAuthenticated}

@@ -10,6 +10,8 @@ import JavascriptCompilerButton from "../utils/JavascriptCompiler/JavascriptComp
 import LearningCards from "./LearningCards/LearningCards";
 import DailyQuiz from "./DailyQuiz/DailyQuiz";
 import DailyQuizStickyIcon from "./DailyQuiz/DailyQuizStickyIcon";
+import FeatureLaunchBanner from "./FeatureLaunchBanner/FeatureLaunchBanner";
+import OutputBasedPromoStrip from "./FeatureLaunchBanner/OutputBasedPromoStrip";
 
 const Dashboard = () => {
     const { loading, showDailyQuiz } = useUser();
@@ -22,6 +24,9 @@ const Dashboard = () => {
     return (
         <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
             <Header />
+
+            {/* Persistent promo strip — Output-Based Questions */}
+            <OutputBasedPromoStrip />
             
             <Section />
 
@@ -40,6 +45,9 @@ const Dashboard = () => {
 
             {/* Daily Quiz popup — rendered on top of everything */}
             {showDailyQuiz && <DailyQuiz />}
+
+            {/* Feature launch announcement — Output-Based Questions */}
+            <FeatureLaunchBanner />
         </div>
     );
 };

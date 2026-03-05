@@ -4,32 +4,43 @@ import { useUser } from "../../utils/UserContext/UserContext";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 import colors from "../../utils/color";
 
+const difficultyMap = {
+    beginner:     { label: "Beginner",     dot: "#10B981" },
+    intermediate: { label: "Intermediate", dot: "#F59E0B" },
+    advanced:     { label: "Advanced",     dot: "#EF4444" },
+};
+
 const Modules = () => {
     const { modules, modulesLoading: loading, modulesError: error } = useUser();
     const { isDark } = useTheme();
     const navigate = useNavigate();
 
-    if (loading) {
-        return <SkeletonLoader variant="modules" />;
-    }
+    /* ── shared style tokens ── */
+    const surface   = isDark ? "#111827" : "#FFFFFF";
+    const surfaceHover = isDark ? "#1F2937" : "#F9FAFB";
+    const border    = isDark ? "rgba(255,255,255,.07)" : "rgba(0,0,0,.08)";
+    const borderHov = isDark ? "rgba(255,255,255,.14)" : "rgba(0,0,0,.14)";
+    const textPrimary   = isDark ? "#F3F4F6" : "#111827";
+    const textSecondary = isDark ? "#9CA3AF" : "#6B7280";
+    const textTertiary  = isDark ? "#6B7280" : "#9CA3AF";
+
+    if (loading) return <SkeletonLoader variant="modules" />;
 
     if (error) {
         return (
-            <div className={`py-12 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <div className="max-w-4xl mx-auto">
-                    <div 
-                        className="rounded-lg p-6 border border-red-200 bg-red-50"
+            <div className="py-10 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-3xl mx-auto">
+                    <div
+                        className="rounded-xl p-5"
                         style={{
-                            background: isDark ? '#1F2937' : '#FEF2F2',
-                            borderColor: isDark ? '#EF4444' : '#FCA5A5'
+                            background: isDark ? "#1C1917" : "#FEF2F2",
+                            border: `1px solid ${isDark ? "#7F1D1D" : "#FECACA"}`,
                         }}
                     >
-                        <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
-                            Error Loading Modules
-                        </h3>
-                        <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                            {error}
+                        <p className="text-sm font-medium" style={{ color: isDark ? "#FCA5A5" : "#DC2626" }}>
+                            Failed to load modules
                         </p>
+                        <p className="text-xs mt-1" style={{ color: textSecondary }}>{error}</p>
                     </div>
                 </div>
             </div>
@@ -37,107 +48,159 @@ const Modules = () => {
     }
 
     return (
-        <div className={`py-6 px-4 sm:px-6 lg:px-8`}>
-            <div className="max-w-7xl mx-auto">
+        <div className="py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-5">
-                    <h2 className={`text-3xl font-bold mb-2 ${colors.blueTextGradient}`}>
-                        Available Modules
+                <div className="mb-6">
+                    <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${colors.blueTextGradient}`}>
+                        Modules
                     </h2>
-                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Explore our comprehensive learning paths
+                    <p className="text-sm mt-1" style={{ color: textSecondary }}>
+                        Choose a learning path to get started.
                     </p>
                 </div>
 
-                {/* Modules Grid */}
+                {/* Empty state */}
                 {modules.length === 0 ? (
-                    <div className={`text-center py-12 rounded-lg border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-                        <p className={`text-base font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                            No modules available at the moment.
-                        </p>
+                    <div
+                        className="rounded-xl py-14 text-center"
+                        style={{ background: surfaceHover, border: `1px solid ${border}` }}
+                    >
+                        <p className="text-sm" style={{ color: textSecondary }}>No modules available yet.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {modules.map((module, index) => (
-                            <div
-                                key={module.id || index}
-                                onClick={() => navigate(`/lessons/module/${module._id}`)}
-                                className={`group rounded-lg border transition-all duration-200 hover:shadow-md cursor-pointer ${
-                                    isDark 
-                                        ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
-                                        : 'bg-white border-gray-200 hover:border-gray-300'
-                                }`}
-                            >
-                                <div className="p-4">
-                                    {/* Module Title */}
-                                    <h3 className={`text-base font-semibold mb-2 ${
-                                        isDark ? 'text-white group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'
-                                    } transition-colors`}>
-                                        {module.title || module.name || `Module ${index + 1}`}
-                                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {modules.map((module, index) => {
+                            const diff = difficultyMap[module.difficulty] || difficultyMap.beginner;
 
-                                    {/* Module Description */}
-                                    <p className={`mb-3 line-clamp-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        {module.description || 'No description available.'}
-                                    </p>
-
-                                    {/* Module Tags */}
-                                    {module.tags && module.tags.length > 0 && (
-                                        <div className="flex flex-wrap gap-1.5 mb-3">
-                                            {module.tags.slice(0, 3).map((tag, tagIndex) => (
-                                                <span 
-                                                    key={tagIndex}
-                                                    className={`px-2 py-0.5 text-xs rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                            return (
+                                <div
+                                    key={module._id || index}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => navigate(`/lessons/module/${module._id}`)}
+                                    onKeyDown={(e) => e.key === "Enter" && navigate(`/lessons/module/${module._id}`)}
+                                    className="group relative flex flex-col rounded-xl cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                    style={{
+                                        background: surface,
+                                        border: `1px solid ${border}`,
+                                        transition: "border-color .2s, box-shadow .2s, transform .2s",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.borderColor = borderHov;
+                                        e.currentTarget.style.boxShadow = isDark
+                                            ? "0 4px 24px rgba(0,0,0,.35)"
+                                            : "0 4px 24px rgba(0,0,0,.07)";
+                                        e.currentTarget.style.transform = "translateY(-2px)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.borderColor = border;
+                                        e.currentTarget.style.boxShadow = "none";
+                                        e.currentTarget.style.transform = "translateY(0)";
+                                    }}
+                                >
+                                    <div className="p-4 flex flex-col flex-1">
+                                        {/* Top row: number + difficulty */}
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span
+                                                className="text-[11px] font-semibold tracking-wide uppercase"
+                                                style={{ color: textTertiary }}
+                                            >
+                                                Module {String(index + 1).padStart(2, "0")}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1.5">
+                                                <span
+                                                    className="w-1.5 h-1.5 rounded-full"
+                                                    style={{ backgroundColor: diff.dot }}
+                                                />
+                                                <span
+                                                    className="text-[11px] font-medium capitalize"
+                                                    style={{ color: textTertiary }}
                                                 >
-                                                    {tag}
+                                                    {diff.label}
                                                 </span>
-                                            ))}
-                                            {module.tags.length > 3 && (
-                                                <span className={`px-2 py-0.5 text-xs rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
-                                                    +{module.tags.length - 3}
-                                                </span>
-                                            )}
+                                            </span>
                                         </div>
-                                    )}
 
-                                    {/* Module Metadata */}
-                                    <div className={`flex items-center justify-between text-xs pt-3 border-t ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
-                                        <div className="flex items-center gap-2">
-                                            <span className={`px-2 py-1 rounded font-medium capitalize ${
-                                                module.difficulty === 'beginner' ? isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700' :
-                                                module.difficulty === 'intermediate' ? isDark ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-100 text-yellow-700' :
-                                                module.difficulty === 'advanced' ? isDark ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700' :
-                                                isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
-                                            }`}>
-                                                {module.difficulty || 'beginner'}
+                                        {/* Title */}
+                                        <h3
+                                            className="text-[15px] font-semibold leading-snug mb-1.5"
+                                            style={{ color: textPrimary }}
+                                        >
+                                            {module.title || module.name || `Untitled Module`}
+                                        </h3>
+
+                                        {/* Description */}
+                                        <p
+                                            className="text-[13px] leading-relaxed line-clamp-2 mb-3"
+                                            style={{ color: textSecondary }}
+                                        >
+                                            {module.description || "No description available."}
+                                        </p>
+
+                                        {/* Tags */}
+                                        {module.tags && module.tags.length > 0 && (
+                                            <div className="flex flex-wrap gap-1.5 mb-3">
+                                                {module.tags.slice(0, 3).map((tag, ti) => (
+                                                    <span
+                                                        key={ti}
+                                                        className="text-[11px] font-medium px-2 py-0.5 rounded-md"
+                                                        style={{
+                                                            background: isDark ? "rgba(255,255,255,.05)" : "rgba(0,0,0,.04)",
+                                                            color: textSecondary,
+                                                        }}
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                                {module.tags.length > 3 && (
+                                                    <span
+                                                        className="text-[11px] font-medium px-2 py-0.5 rounded-md"
+                                                        style={{
+                                                            background: isDark ? "rgba(255,255,255,.05)" : "rgba(0,0,0,.04)",
+                                                            color: textTertiary,
+                                                        }}
+                                                    >
+                                                        +{module.tags.length - 3}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Spacer */}
+                                        <div className="flex-1" />
+
+                                        {/* Footer */}
+                                        <div
+                                            className="flex items-center justify-between pt-3 mt-1"
+                                            style={{ borderTop: `1px solid ${border}` }}
+                                        >
+                                            <span className="text-[12px] font-medium" style={{ color: textTertiary }}>
+                                                {module.estimatedDuration ? `${module.estimatedDuration} hrs` : "Self-paced"}
                                             </span>
-                                            <span className={isDark ? 'text-gray-500' : 'text-gray-500'}>
-                                                {module.estimatedDuration ? `${module.estimatedDuration}h` : 'Self-paced'}
+
+                                            <span
+                                                className="inline-flex items-center gap-1 text-[12px] font-semibold transition-all duration-200"
+                                                style={{ color: isDark ? "#60A5FA" : "#2563EB" }}
+                                            >
+                                                Start
+                                                <svg
+                                                    className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={2.2}
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6-6m6 6l-6 6" />
+                                                </svg>
                                             </span>
                                         </div>
-                                        <svg className={`w-5 h-5 transition-transform group-hover:translate-x-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
-
-                {/* Additional Stats */}
-                {/* {modules.length > 0 && (
-                    <div className="mt-12 text-center">
-                        <div className="inline-flex items-center gap-6">
-                            <div className={`text-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                <div className={`text-2xl font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-                                    {modules.length}
-                                </div>
-                                <div className="text-sm">Total Modules</div>
-                            </div>
-                        </div>
-                    </div>
-                )} */}
             </div>
         </div>
     );

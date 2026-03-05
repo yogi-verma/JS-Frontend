@@ -107,8 +107,9 @@ const LearningCards = ({ onLoginRequired }) => {
         "All Difficulty Levels",
       ],
       difficulties: [
-        { label: "Easy", count: 5, color: "#10B981" },
-        { label: "Medium", count: 6, color: "#F59E0B" },
+        { label: "Easy", count: 45, color: "#10B981" },
+        { label: "Medium", count: 37, color: "#F59E0B" },
+        { label: "Hard", count: 9, color: "#EF4444" }
       ],
       gradient: {
         dark: "linear-gradient(135deg, #1a0a2e 0%, #0f172a 50%, #164e63 100%)",
