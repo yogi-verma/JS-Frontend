@@ -253,7 +253,7 @@ const DailyQuiz = () => {
     }, [setShowDailyQuiz]);
 
     const dismiss = useCallback(() => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
         localStorage.setItem(DISMISS_KEY, today);
         setMounted(false);
         setTimeout(() => setShowDailyQuiz(false), 250);

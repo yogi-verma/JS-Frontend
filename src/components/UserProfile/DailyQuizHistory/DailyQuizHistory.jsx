@@ -177,7 +177,8 @@ const MonthCalendar = ({ year, month, calendarData, selectedDate, onSelectDate, 
   // month is 0-indexed here
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const todayStr = new Date().toISOString().split("T")[0];
+  // Use IST so the calendar highlights the correct "today" for Indian users
+  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
   const cells = [];
   // Leading empty cells

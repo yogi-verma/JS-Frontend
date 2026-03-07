@@ -35,8 +35,8 @@ const getFirstDayOfMonth = (year, month) =>
   new Date(year, month - 1, 1).getDay();
 
 const todayStr = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  // Use IST so the calendar highlights the correct "today" for Indian users
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 };
 
 /* ─── Intensity color ─── */

@@ -1011,6 +1011,105 @@ export const getStreakHistory = async (days = 365) => {
 };
 
 // ═══════════════════════════════════════════════════
+// Badges API
+// ═══════════════════════════════════════════════════
+
+/**
+ * Get all badges for the logged-in user (earned + unearned)
+ * @returns {Promise<Object>} { badges, totalEarned, totalAvailable }
+ */
+export const getUserBadges = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/badges`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { badges: [], totalEarned: 0, totalAvailable: 0 } };
+            throw new Error(`Failed to fetch badges: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching user badges:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get unseen badges (for popup display)
+ * @returns {Promise<Object>} { badges: [...] }
+ */
+export const getUnseenBadges = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/badges/unseen`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) return { success: true, data: { badges: [] } };
+            throw new Error(`Failed to fetch unseen badges: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching unseen badges:', err);
+        throw err;
+    }
+};
+
+/**
+ * Mark badges as seen (dismiss popup)
+ * @param {string[]} badgeIds - Array of badge IDs to mark as seen
+ * @returns {Promise<Object>} { markedCount }
+ */
+export const markBadgesAsSeen = async (badgeIds) => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/badges/seen`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ badgeIds }),
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to mark badges as seen: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error marking badges as seen:', err);
+        throw err;
+    }
+};
+
+/**
+ * Get public list of all available badge definitions
+ * @returns {Promise<Object>} { badges: [...] }
+ */
+export const getBadgeDefinitions = async () => {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/badges/definitions`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch badge definitions: ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching badge definitions:', err);
+        throw err;
+    }
+};
+
+// ═══════════════════════════════════════════════════
 // Daily Quiz API
 // ═══════════════════════════════════════════════════
 

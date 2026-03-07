@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
-import { getCodingQuestions, getUserCodingProgress } from "../../utils/BackendCalls/authService";
+import { getCodingQuestions, getUserCodingProgress, getUserBadges } from "../../utils/BackendCalls/authService";
 import { useUser } from "../../utils/UserContext/UserContext";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
+import { FiAward } from "react-icons/fi";
 
 const JavascriptMachineCoding = () => {
   const { isDark } = useTheme();
@@ -18,6 +19,7 @@ const JavascriptMachineCoding = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [progressMap, setProgressMap] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [badgeCount, setBadgeCount] = useState(0);
   const questionsPerPage = 15;
 
   useEffect(() => {
@@ -50,6 +52,22 @@ const JavascriptMachineCoding = () => {
       }
     };
     fetchData();
+  }, [isAuthenticated]);
+
+  // Fetch badge count independently
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const fetchBadges = async () => {
+      try {
+        const badgeRes = await getUserBadges();
+        if (badgeRes?.success && badgeRes.data) {
+          setBadgeCount(badgeRes.data.totalEarned || 0);
+        }
+      } catch {
+        // Silent fail
+      }
+    };
+    fetchBadges();
   }, [isAuthenticated]);
 
   const filteredQuestions = questions.filter(q => {
@@ -126,7 +144,7 @@ const JavascriptMachineCoding = () => {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate('/dashboard')}
                     className={`p-2 rounded-lg transition-all duration-200 group ${
                       isDark
                         ? 'hover:bg-gray-700/50 text-gray-400 hover:text-gray-200'
@@ -187,6 +205,20 @@ const JavascriptMachineCoding = () => {
                     </svg>
                     {stats.solved} solved
                   </div>
+                )}
+                {isAuthenticated && badgeCount > 0 && (
+                  <button
+                    onClick={() => navigate('/dashboard/profile', { state: { tab: 'badges' } })}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer hover:scale-105 ${
+                      isDark
+                        ? 'bg-amber-900/20 text-amber-400 border-amber-800/30 hover:bg-amber-900/40'
+                        : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                    }`}
+                    title="View your badges"
+                  >
+                    <FiAward className="w-3.5 h-3.5" />
+                    {badgeCount} {badgeCount === 1 ? 'badge' : 'badges'}
+                  </button>
                 )}
               </div>
             </div>

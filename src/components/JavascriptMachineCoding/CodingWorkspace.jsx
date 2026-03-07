@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
-import { getCodingQuestionById, getCodingQuestions, getUserCodingProgress, runCodingTestCases, submitCodingSolution, getUserCodingSubmission, getUserCodingSubmissions } from "../../utils/BackendCalls/authService";
+import { getCodingQuestionById, getCodingQuestions, getUserCodingProgress, runCodingTestCases, submitCodingSolution, getUserCodingSubmission, getUserCodingSubmissions, markBadgesAsSeen, getUserBadges } from "../../utils/BackendCalls/authService";
 import { useUser } from "../../utils/UserContext/UserContext";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
+import BadgePopup from "../UserProfile/Badges/BadgePopup";
+import { FiAward } from "react-icons/fi";
 
 // ─── Syntax Highlighting Engine (reused from JavascriptCompiler) ───
 const tokenize = (code) => {
@@ -147,6 +149,8 @@ const CodingWorkspace = () => {
   const [showCongrats, setShowCongrats] = useState(false);
   const [congratsType, setCongratsType] = useState(null); // 'streak' | 'extra'
   const [streakInfo, setStreakInfo] = useState(null); // { currentStreak, todaySolveCount }
+  const [pendingBadges, setPendingBadges] = useState([]); // badges earned from this submission
+  const [showBadgePopup, setShowBadgePopup] = useState(null); // currently displayed badge
 
   // Submissions history
   const [submissions, setSubmissions] = useState([]);
@@ -155,6 +159,7 @@ const CodingWorkspace = () => {
   // All questions list for sidebar & prev/next nav
   const [allQuestions, setAllQuestions] = useState([]);
   const [progressMap, setProgressMap] = useState({});
+  const [badgeCount, setBadgeCount] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
   const sidebarRef = useRef(null);
 
@@ -207,6 +212,14 @@ const CodingWorkspace = () => {
             }
           } catch (err) {
             console.error('Error fetching coding progress:', err);
+          }
+          try {
+            const badgeRes = await getUserBadges();
+            if (badgeRes?.success && badgeRes.data) {
+              setBadgeCount(badgeRes.data.totalEarned || 0);
+            }
+          } catch (err) {
+            // Silent fail for badges
           }
         }
       } catch (err) {
@@ -302,6 +315,12 @@ const CodingWorkspace = () => {
       if (res?.success && res?.data) {
         setSubmitResult(res.data);
         if (res.data.accepted) {
+          // Capture new badges from the response
+          const earnedBadges = res.data.newBadges || [];
+          if (earnedBadges.length > 0) {
+            setPendingBadges(earnedBadges.map(b => ({ ...b, earned: true })));
+          }
+
           // Determine congrats type from streak data
           const streak = res.data.streak;
           if (streak) {
@@ -312,7 +331,16 @@ const CodingWorkspace = () => {
             setStreakInfo(null);
           }
           setShowCongrats(true);
-          setTimeout(() => setShowCongrats(false), 5000);
+          // Auto-dismiss streak popup after 4s, then show badge popup if any
+          setTimeout(() => {
+            setShowCongrats(false);
+            // After streak popup closes, show badge popup if earned
+            setTimeout(() => {
+              if (earnedBadges.length > 0) {
+                setShowBadgePopup(earnedBadges.map(b => ({ ...b, earned: true }))[0]);
+              }
+            }, 400);
+          }, 4000);
           // Refresh progress map
           try {
             const progressRes = await getUserCodingProgress();
@@ -561,6 +589,30 @@ const CodingWorkspace = () => {
         </div>
       )}
 
+      {/* Badge Earned Popup */}
+      {showBadgePopup && (
+        <BadgePopup
+          badge={showBadgePopup}
+          isDark={isDark}
+          onClose={async () => {
+            // Mark badge as seen in backend
+            try {
+              await markBadgesAsSeen([showBadgePopup.badgeId]);
+            } catch (e) {
+              console.error('Error marking badge as seen:', e);
+            }
+            // Check if there are more pending badges
+            const remaining = pendingBadges.filter(b => b.badgeId !== showBadgePopup.badgeId);
+            setPendingBadges(remaining);
+            if (remaining.length > 0) {
+              setTimeout(() => setShowBadgePopup(remaining[0]), 300);
+            } else {
+              setShowBadgePopup(null);
+            }
+          }}
+        />
+      )}
+
       <style>{`
         @keyframes congratsFadeIn {
           from { opacity: 0; }
@@ -683,6 +735,22 @@ const CodingWorkspace = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Badge icon */}
+          {isAuthenticated && badgeCount > 0 && (
+            <button
+              onClick={() => navigate('/dashboard/profile', { state: { tab: 'badges' } })}
+              className={`relative flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer border ${
+                isDark
+                  ? 'bg-amber-900/20 text-amber-400 border-amber-800/40 hover:bg-amber-900/40'
+                  : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+              }`}
+              title="View your badges"
+            >
+              <FiAward className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{badgeCount}</span>
+            </button>
+          )}
+
           {/* Font size controls */}
           <div className={`hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg border ${
             isDark ? 'border-gray-700' : 'border-gray-200'
