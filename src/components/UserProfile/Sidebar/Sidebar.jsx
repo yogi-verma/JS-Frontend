@@ -1,8 +1,9 @@
-import { FiUser, FiZap, FiCalendar } from "react-icons/fi";
+import { FiUser, FiZap, FiCalendar, FiAward } from "react-icons/fi";
 
 const tabs = [
   { key: "profile", label: "User Profile", icon: FiUser },
   { key: "streak", label: "Activity Streak", icon: FiZap },
+  { key: "badges", label: "Badges", icon: FiAward },
   { key: "quiz", label: "Quiz History", icon: FiCalendar },
 ];
 

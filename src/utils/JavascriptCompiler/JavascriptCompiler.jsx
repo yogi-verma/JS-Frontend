@@ -459,7 +459,7 @@ const JavascriptCompiler = () => {
       }
     };
 
-    return () => {
+    const restore = () => {
       console.log = originalLog;
       console.error = originalError;
       console.warn = originalWarn;
@@ -467,11 +467,12 @@ const JavascriptCompiler = () => {
       console.table = originalTable;
       console.time = originalTime;
       console.timeEnd = originalTimeEnd;
-      return logs;
     };
+
+    return { logs, restore };
   };
 
-  // ─── Run Code ───
+  // ─── Run Code (with async support) ───
   const runCode = useCallback(() => {
     setIsRunning(true);
     setOutput([]);
@@ -479,44 +480,29 @@ const JavascriptCompiler = () => {
     setActiveTab('output');
 
     const startTime = performance.now();
-    const restoreConsole = captureConsole();
+    const { logs, restore: restoreConsole } = captureConsole();
 
-    try {
-      const func = new Function(code);
-      const result = func();
-      const logs = restoreConsole();
-      const elapsed = performance.now() - startTime;
-      setExecutionTime(elapsed.toFixed(2));
+    // ─── Async Operation Tracking ───
+    const pendingTimers = new Set();
+    const activeIntervals = new Set();
+    const origSetTimeout = window.setTimeout.bind(window);
+    const origClearTimeout = window.clearTimeout.bind(window);
+    const origSetInterval = window.setInterval.bind(window);
+    const origClearInterval = window.clearInterval.bind(window);
 
-      if (result !== undefined) {
-        logs.push({
-          type: 'result',
-          content: typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result),
-          timestamp: Date.now(),
-        });
-      }
+    const MAX_ASYNC_WAIT = 10000; // 10 seconds max wait for async ops
+    let settled = false;
+    let maxWaitTimer = null;
 
-      if (logs.length > 0) {
-        setOutput(logs);
-      } else {
-        setOutput([{ type: 'success', content: 'Program executed successfully (no output)', timestamp: Date.now() }]);
-      }
-      setExecutionStatus('success');
-    } catch (error) {
-      restoreConsole();
-      const elapsed = performance.now() - startTime;
-      setExecutionTime(elapsed.toFixed(2));
-
-      // Extract detailed error info
+    const buildErrorOutput = (error) => {
       let lineNumber = null;
       let columnNumber = null;
-
       if (error.stack) {
         const stackLines = error.stack.split('\n');
         for (const sLine of stackLines) {
           const match = sLine.match(/<anonymous>:(\d+):(\d+)/);
           if (match) {
-            lineNumber = parseInt(match[1], 10) - 2; // Adjust for Function wrapper
+            lineNumber = parseInt(match[1], 10) - 2;
             columnNumber = parseInt(match[2], 10);
             break;
           }
@@ -528,19 +514,14 @@ const JavascriptCompiler = () => {
           }
         }
       }
-
-      // Build structured error
       const errorLines = [];
       errorLines.push(`${error.name}: ${error.message}`);
       if (lineNumber && lineNumber > 0) {
         errorLines.push('');
         errorLines.push(`  at line ${lineNumber}${columnNumber ? `, column ${columnNumber}` : ''}`);
-
-        // Show the offending line if possible
         const codeLines = code.split('\n');
         if (lineNumber <= codeLines.length) {
           errorLines.push('');
-          // Show surrounding context (up to 2 lines before/after)
           const start = Math.max(0, lineNumber - 2);
           const end = Math.min(codeLines.length, lineNumber + 1);
           for (let i = start; i < end; i++) {
@@ -554,17 +535,162 @@ const JavascriptCompiler = () => {
           }
         }
       }
+      return errorLines.join('\n');
+    };
 
-      setOutput([{ type: 'error', content: errorLines.join('\n'), timestamp: Date.now() }]);
-      setExecutionStatus('error');
-    } finally {
+    const finalize = (error = null) => {
+      if (settled) return;
+      settled = true;
+
+      // Clear safety timer
+      if (maxWaitTimer) origClearTimeout(maxWaitTimer);
+
+      // Clear remaining async operations
+      pendingTimers.forEach((id) => { if (typeof id !== 'symbol') origClearTimeout(id); });
+      activeIntervals.forEach((id) => origClearInterval(id));
+      pendingTimers.clear();
+      activeIntervals.clear();
+
+      // Restore overrides
+      window.setTimeout = origSetTimeout;
+      window.clearTimeout = origClearTimeout;
+      window.setInterval = origSetInterval;
+      window.clearInterval = origClearInterval;
+      restoreConsole();
+
+      const elapsed = performance.now() - startTime;
+      setExecutionTime(elapsed.toFixed(2));
+
+      if (error) {
+        const outputLogs = [...logs, { type: 'error', content: buildErrorOutput(error), timestamp: Date.now() }];
+        setOutput(outputLogs);
+        setExecutionStatus('error');
+      } else {
+        if (logs.length > 0) {
+          setOutput([...logs]);
+        } else {
+          setOutput([{ type: 'success', content: 'Program executed successfully (no output)', timestamp: Date.now() }]);
+        }
+        setExecutionStatus('success');
+      }
+
       setIsRunning(false);
-      // Auto-scroll output
-      setTimeout(() => {
+      origSetTimeout(() => {
         if (outputRef.current) {
           outputRef.current.scrollTop = outputRef.current.scrollHeight;
         }
       }, 50);
+    };
+
+    const checkAllDone = () => {
+      if (!settled && pendingTimers.size === 0 && activeIntervals.size === 0) {
+        finalize();
+      }
+    };
+
+    // Override setTimeout to track pending callbacks
+    window.setTimeout = (fn, delay, ...args) => {
+      if (settled) return origSetTimeout(fn, delay, ...args);
+      const id = origSetTimeout(() => {
+        pendingTimers.delete(id);
+        if (!settled) {
+          try {
+            if (typeof fn === 'function') fn(...args);
+          } catch (e) {
+            finalize(e);
+            return;
+          }
+          checkAllDone();
+        }
+      }, delay);
+      pendingTimers.add(id);
+      return id;
+    };
+
+    window.clearTimeout = (id) => {
+      pendingTimers.delete(id);
+      origClearTimeout(id);
+      checkAllDone();
+    };
+
+    // Override setInterval to track active intervals
+    window.setInterval = (fn, delay, ...args) => {
+      if (settled) return origSetInterval(fn, delay, ...args);
+      const id = origSetInterval(() => {
+        if (!settled) {
+          try {
+            if (typeof fn === 'function') fn(...args);
+          } catch (e) {
+            origClearInterval(id);
+            activeIntervals.delete(id);
+            finalize(e);
+          }
+        }
+      }, delay);
+      activeIntervals.add(id);
+      return id;
+    };
+
+    window.clearInterval = (id) => {
+      activeIntervals.delete(id);
+      origClearInterval(id);
+      checkAllDone();
+    };
+
+    try {
+      const func = new Function(code);
+      const result = func();
+
+      // Handle promise return values
+      if (result && typeof result.then === 'function') {
+        const promiseId = Symbol('promise');
+        pendingTimers.add(promiseId);
+        result
+          .then((val) => {
+            pendingTimers.delete(promiseId);
+            if (val !== undefined) {
+              logs.push({
+                type: 'result',
+                content: typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val),
+                timestamp: Date.now(),
+              });
+            }
+            checkAllDone();
+          })
+          .catch((err) => {
+            pendingTimers.delete(promiseId);
+            finalize(err);
+          });
+      } else if (result !== undefined) {
+        logs.push({
+          type: 'result',
+          content: typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result),
+          timestamp: Date.now(),
+        });
+      }
+
+      // Use a macrotask to check completion after all microtasks (Promises) have flushed
+      origSetTimeout(() => {
+        if (!settled) {
+          if (pendingTimers.size === 0 && activeIntervals.size === 0) {
+            finalize();
+          } else {
+            // Set safety timeout for long-running async operations
+            maxWaitTimer = origSetTimeout(() => {
+              if (!settled) {
+                logs.push({
+                  type: 'warn',
+                  content: `Execution timed out after ${MAX_ASYNC_WAIT / 1000}s (async operations may still be pending)`,
+                  timestamp: Date.now(),
+                });
+                finalize();
+              }
+            }, MAX_ASYNC_WAIT);
+          }
+        }
+      }, 0);
+    } catch (error) {
+      finalize(error);
     }
   }, [code]);
 

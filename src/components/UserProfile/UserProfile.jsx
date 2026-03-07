@@ -4,7 +4,7 @@ import { useUser } from "../../utils/UserContext/UserContext";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import { FiArrowLeft, FiUser, FiBriefcase, FiShare2, FiShield, FiMail, FiCalendar, FiZap } from "react-icons/fi";
+import { FiArrowLeft, FiUser, FiBriefcase, FiShare2, FiShield, FiMail, FiCalendar, FiZap, FiAward } from "react-icons/fi";
 import { initEmailJS } from "../../utils/emailService";
 import DisplayName from "./DisplayName/DisplayName";
 import DisplayEmail from "./DisplayEmail/DisplayEmail";
@@ -17,6 +17,7 @@ import DisplaySocialLinks from "./DisplaySocialLinks/DisplaySocialLinks";
 import DisplayAccountInformation from "./DisplayAccountInformation/DisplayAccountInformation";
 import ProgressAnalytics from "./ProgressAnalytics/ProgressAnalytics";
 import Streak from "./Streak/Streak";
+import Badges from "./Badges/Badges";
 import DailyQuizHistory from "./DailyQuizHistory/DailyQuizHistory";
 import DailyQuiz from "../DailyQuiz/DailyQuiz";
 import Sidebar from "./Sidebar/Sidebar";
@@ -324,6 +325,14 @@ const UserProfile = () => {
     </ProfileCard>
   );
 
+  const renderBadgesTab = () => (
+    <ProfileCard icon={FiAward} title="Badges" iconColor="#F59E0B" isDark={isDark}>
+      <div className="p-4">
+        <Badges isDark={isDark} />
+      </div>
+    </ProfileCard>
+  );
+
   const renderQuizTab = () => (
     <ProfileCard icon={FiCalendar} title="Daily Quiz History" iconColor="#8B5CF6" isDark={isDark}>
       <div className="p-4">
@@ -335,6 +344,7 @@ const UserProfile = () => {
   const tabContent = {
     profile: renderProfileTab,
     streak: renderStreakTab,
+    badges: renderBadgesTab,
     quiz: renderQuizTab,
   };
 

@@ -233,7 +233,7 @@ export const UserProvider = ({ children }) => {
     const checkAndShowQuiz = useCallback(async () => {
         try {
             // If the user already dismissed the quiz today, stay silent
-            const today = new Date().toISOString().split('T')[0];
+            const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
             const dismissedDate = localStorage.getItem('dailyQuizDismissedDate');
             if (dismissedDate === today) return;
 
