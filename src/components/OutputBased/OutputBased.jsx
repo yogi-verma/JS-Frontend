@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import AnimatedBackground from "../AnimatedBackground/AnimatedBackground";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import {
   getOutputBasedQuestions,
@@ -9,6 +10,7 @@ import {
 } from "../../utils/BackendCalls/authService";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
 import QuestionCard from "./QuestionCard";
+import ScrollToTopButton from "../ScrollToTop/ScrollToTopButton";
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
 /* ─── MAIN PAGE ─────────────────────────────────────────────────────────── */
@@ -97,7 +99,12 @@ const OutputBased = () => {
 
   if (error) {
     return (
-      <div className={`min-h-screen ${isDark ? "bg-gray-900" : "bg-white"}`}>
+      <div
+        className={`relative min-h-screen ${isDark ? 'bg-gray-900' : ''}`}
+        style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+      >
+        <AnimatedBackground isDark={isDark} />
+        <div className="relative z-10">
         <Header />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div
@@ -123,6 +130,7 @@ const OutputBased = () => {
             </p>
           </div>
         </div>
+        </div>
       </div>
     );
   }
@@ -130,16 +138,17 @@ const OutputBased = () => {
   /* ═══════════════════════════════════════════════════════════════════════ */
   return (
     <div
-      className={`min-h-screen flex flex-col ${
-        isDark ? "bg-gray-900" : "bg-gray-50"
-      }`}
+      className={`relative min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : ''}`}
+      style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
     >
+      <AnimatedBackground isDark={isDark} />
+      <div className="relative z-10 flex flex-col flex-1">
       <Header />
 
       <main className="flex-grow">
         {/* ───────────────────── HERO ───────────────────── */}
         <div
-          className={`relative overflow-hidden border-b ${
+          className={`relative overflow-hidden ${
             isDark
               ? "border-gray-800"
               : "border-gray-200"
@@ -148,11 +157,6 @@ const OutputBased = () => {
           {/* Animated gradient bg */}
           <div
             className="absolute inset-0"
-            style={{
-              background: isDark
-                ? "linear-gradient(135deg, #0f0a1e 0%, #0f172a 50%, #0a1628 100%)"
-                : "linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #ede9fe 100%)",
-            }}
           />
           <div
             className="absolute -top-32 -right-32 w-72 h-72 rounded-full blur-3xl"
@@ -591,7 +595,8 @@ const OutputBased = () => {
           }
         }
       `}</style>
-    </div>
+      <ScrollToTopButton />
+      </div>    </div>
   );
 };
 

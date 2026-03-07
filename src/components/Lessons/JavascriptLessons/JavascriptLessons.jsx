@@ -5,6 +5,8 @@ import SkeletonLoader from "../../../utils/SkeletonLoader/SkeletonLoader";
 import { useUser } from "../../../utils/UserContext/UserContext";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
+import AnimatedBackground from "../../AnimatedBackground/AnimatedBackground";
+import ScrollToTopButton from "../../ScrollToTop/ScrollToTopButton";
 
 const JavascriptLessons = () => {
     const { lessonsCache, fetchLessonsByModule } = useUser();
@@ -75,8 +77,12 @@ const JavascriptLessons = () => {
 
     if (error) {
         return (
-            <div className={`min-h-screen py-12 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
-                <div className="max-w-4xl mx-auto">
+            <div
+                className={`relative min-h-screen py-12 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gray-950' : ''}`}
+                style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+            >
+                <AnimatedBackground isDark={isDark} />
+                <div className="relative z-10 max-w-4xl mx-auto">
                     <div className={`rounded-2xl p-8 border ${isDark ? 'bg-gray-900 border-red-500/20' : 'bg-white border-red-200'} shadow-lg`}>
                         <div className="flex items-start gap-4">
                             <div className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? 'bg-red-500/10' : 'bg-red-50'}`}>
@@ -107,7 +113,12 @@ const JavascriptLessons = () => {
     const totalConcepts = lessons.reduce((acc, l) => acc + (l.concepts?.length || 0), 0);
 
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <div
+            className={`relative min-h-screen ${isDark ? 'bg-gray-950' : ''}`}
+            style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+        >
+            <AnimatedBackground isDark={isDark} />
+            <div className="relative z-10">
             <Header />
             <div className="py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
@@ -305,6 +316,10 @@ const JavascriptLessons = () => {
                 </div>
             </div>
             <Footer />
+
+            {/* Scroll to top button */}
+            <ScrollToTopButton />
+            </div>
         </div>
     );
 };

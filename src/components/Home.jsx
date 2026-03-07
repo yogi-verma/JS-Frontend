@@ -10,6 +10,7 @@ import Reason from "./Reason/Reason";
 import SpecialButton from "./SpecialButton/SpecialButton";
 import LearningCards from "./LearningCards/LearningCards";
 import OutputBasedPromoStrip from "./FeatureLaunchBanner/OutputBasedPromoStrip";
+import AnimatedBackground from "./AnimatedBackground/AnimatedBackground";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -24,7 +25,9 @@ const Home = () => {
     }, [isAuthenticated, loading, navigate]);
 
     return (
-        <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+        <div className={`relative min-h-screen flex flex-col overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+            <AnimatedBackground isDark={isDark} />
+            <div className="relative z-10 flex flex-col flex-1">
             <Header />
 
             <OutputBasedPromoStrip onLoginRequired={initializeGoogleLogin} />
@@ -41,6 +44,7 @@ const Home = () => {
             <SpecialButton />
 
             <Footer />
+            </div>
         </div>
     );
 };

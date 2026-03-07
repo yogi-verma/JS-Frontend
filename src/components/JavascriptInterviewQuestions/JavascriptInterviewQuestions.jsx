@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import AnimatedBackground from "../AnimatedBackground/AnimatedBackground";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import { getInterviewQuestions, getUserInterviewProgress, toggleQuestionCompletion } from "../../utils/BackendCalls/authService";
 import { useUser } from "../../utils/UserContext/UserContext";
 import SkeletonLoader from "../../utils/SkeletonLoader/SkeletonLoader";
+import ScrollToTopButton from "../ScrollToTop/ScrollToTopButton";
 
 const JavascriptInterviewQuestions = () => {
   const { isDark } = useTheme();
@@ -152,12 +154,18 @@ const JavascriptInterviewQuestions = () => {
 
   if (error) {
     return (
-      <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-        <Header />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className={`rounded-lg p-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-red-50 border-red-200'}`}>
-            <p className={`font-semibold ${isDark ? 'text-red-400' : 'text-red-600'}`}>Failed to load questions</p>
-            <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{error}</p>
+      <div
+        className={`relative min-h-screen ${isDark ? 'bg-gray-900' : ''}`}
+        style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+      >
+        <AnimatedBackground isDark={isDark} />
+        <div className="relative z-10">
+          <Header />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className={`rounded-lg p-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-red-50 border-red-200'}`}>
+              <p className={`font-semibold ${isDark ? 'text-red-400' : 'text-red-600'}`}>Failed to load questions</p>
+              <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{error}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -165,12 +173,17 @@ const JavascriptInterviewQuestions = () => {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div
+      className={`relative min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : ''}`}
+      style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+    >
+      <AnimatedBackground isDark={isDark} />
+      <div className="relative z-10 flex flex-col flex-1">
       <Header />
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <div className={`border-b ${isDark ? 'bg-gray-800/50 border-gray-800' : 'bg-white border-gray-200'}`}>
+        <div className={``}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
@@ -579,6 +592,10 @@ const JavascriptInterviewQuestions = () => {
       </main>
 
       <Footer />
+
+      {/* Scroll to top button */}
+      <ScrollToTopButton />
+      </div>
     </div>
   );
 };

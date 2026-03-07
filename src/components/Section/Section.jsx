@@ -16,7 +16,7 @@ const Section = ({ showLoginButton = false, onLoginClick }) => {
     const { isDark } = useTheme();
     return (
         <section
-            className={`relative overflow-hidden transition-colors duration-300 ${isDark ? "bg-slate-900/40" : "bg-slate-50/80"}`}
+            className={`relative overflow-hidden transition-colors duration-300 `}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-5">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">

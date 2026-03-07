@@ -164,6 +164,12 @@ const CodingWorkspace = () => {
   const sidebarRef = useRef(null);
 
   useEffect(() => {
+    // Reset result/submission state when switching questions
+    setTestResults(null);
+    setSubmitResult(null);
+    setSubmissions([]);
+    setLeftTab('description');
+
     const fetchQuestion = async () => {
       try {
         setLoading(true);

@@ -20,11 +20,7 @@ const Header = () => {
 
 	return (
 		<header
-			style={{
-				background: isDark ? '#1F2937' : colors.white,
-				borderColor: isDark ? '#374151' : '#E0E7FF'
-			}}
-			className={`sticky top-0 z-50 w-full max-w-full overflow-hidden text-gray-800 border-b shadow-sm py-1 sm:py-2 ${isDark ? 'text-gray-100' : ''}`}
+			className={`w-full max-w-full overflow-hidden text-gray-800 shadow-sm py-1 sm:py-2 ${isDark ? 'text-gray-100' : ''}`}
 		>
 			<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between">
 				<div className="flex items-center">
