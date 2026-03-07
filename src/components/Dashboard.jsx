@@ -1,6 +1,8 @@
 import { useTheme } from "../utils/WhiteDarkMode/useTheme";
+import ScrollToTopButton from "./ScrollToTop/ScrollToTopButton";
 import { useUser } from "../utils/UserContext/UserContext";
 import Header from "./Header/Header";
+import AnimatedBackground from "./AnimatedBackground/AnimatedBackground";
 import Section from "./Section/Section";
 import Reason from "./Reason/Reason";
 import Modules from "./Modules/Modules";
@@ -22,7 +24,12 @@ const Dashboard = () => {
     }
 
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
+        <div
+            className={`relative min-h-screen ${isDark ? 'bg-gray-900 text-gray-100' : 'text-gray-800'}`}
+            style={!isDark ? { background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)' } : undefined}
+        >
+            <AnimatedBackground isDark={isDark} />
+            <div className="relative z-10">
             <Header />
 
             {/* Persistent promo strip — Output-Based Questions */}
@@ -48,6 +55,10 @@ const Dashboard = () => {
 
             {/* Feature launch announcement — Output-Based Questions */}
             <FeatureLaunchBanner />
+
+            {/* Scroll to top button — visible on scroll */}
+            <ScrollToTopButton />
+            </div>
         </div>
     );
 };

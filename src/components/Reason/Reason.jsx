@@ -47,7 +47,7 @@ const Reason = () => {
   const { isDark } = useTheme();
   return (
     <section
-      className={`text-center py-6 sm:py-7 md:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 ${isDark ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`text-center py-6 sm:py-7 md:py-8 lg:py-10 px-4 sm:px-6 lg:px`}
     >
       <h2 className={`text-3xl font-bold mb-3 ${colors.blueTextGradient}`}>
         Why learn FullStack here?

@@ -15,6 +15,7 @@ import FrontendQuestionBundle from './components/FrontendQuestionsBundle/Fronten
 import JavascriptMachineCoding from './components/JavascriptMachineCoding/JavascriptMachineCoding';
 import CodingWorkspace from './components/JavascriptMachineCoding/CodingWorkspace';
 import OutputBased from './components/OutputBased/OutputBased';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
     return (
@@ -106,6 +107,7 @@ function App() {
                                 </ProtectedRoute>
                             } 
                         />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>
                 </UserProvider>

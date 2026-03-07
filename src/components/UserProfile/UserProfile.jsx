@@ -4,6 +4,7 @@ import { useUser } from "../../utils/UserContext/UserContext";
 import { useTheme } from "../../utils/WhiteDarkMode/useTheme";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import AnimatedBackground from "../AnimatedBackground/AnimatedBackground";
 import { FiArrowLeft, FiUser, FiBriefcase, FiShare2, FiShield, FiMail, FiCalendar, FiZap, FiAward } from "react-icons/fi";
 import { initEmailJS } from "../../utils/emailService";
 import DisplayName from "./DisplayName/DisplayName";
@@ -21,6 +22,7 @@ import Badges from "./Badges/Badges";
 import DailyQuizHistory from "./DailyQuizHistory/DailyQuizHistory";
 import DailyQuiz from "../DailyQuiz/DailyQuiz";
 import Sidebar from "./Sidebar/Sidebar";
+import ScrollToTopButton from "../ScrollToTop/ScrollToTopButton";
 
 /* ─── Reusable card wrapper ─── */
 const ProfileCard = ({ icon, title, iconColor, isDark, children }) => {
@@ -83,9 +85,15 @@ const UserProfile = () => {
   if (!user) {
     return (
       <div
-        className="min-h-screen flex flex-col"
-        style={{ background: isDark ? "#0D1117" : "#F6F8FA" }}
+        className="relative min-h-screen flex flex-col"
+        style={{
+          background: isDark
+            ? '#0D1117'
+            : 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)',
+        }}
       >
+        <AnimatedBackground isDark={isDark} />
+        <div className="relative z-10 flex flex-col flex-1">
         <Header />
         <div className="flex-1 flex items-center justify-center p-4">
           <div
@@ -119,6 +127,7 @@ const UserProfile = () => {
           </div>
         </div>
         <Footer />
+        </div>
       </div>
     );
   }
@@ -350,9 +359,15 @@ const UserProfile = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
-      style={{ background: isDark ? "#0D1117" : "#F6F8FA" }}
+      className="relative min-h-screen flex flex-col"
+      style={{
+        background: isDark
+          ? '#0D1117'
+          : 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 45%, #EDE9FE 100%)',
+      }}
     >
+      <AnimatedBackground isDark={isDark} />
+      <div className="relative z-10 flex flex-col flex-1">
       <Header />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -389,6 +404,10 @@ const UserProfile = () => {
 
       {/* Daily Quiz popup */}
       {showDailyQuiz && <DailyQuiz />}
+
+      {/* Scroll to top button */}
+      <ScrollToTopButton />
+      </div>
     </div>
   );
 };

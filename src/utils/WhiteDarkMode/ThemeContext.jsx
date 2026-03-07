@@ -8,8 +8,8 @@ export const ThemeProvider = ({ children }) => {
         if (saved) {
             return saved === 'dark';
         }
-        // Default to light mode
-        return false;
+        // Default to dark mode
+        return true;
     });
 
     useEffect(() => {
