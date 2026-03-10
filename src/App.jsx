@@ -16,6 +16,7 @@ import JavascriptMachineCoding from './components/JavascriptMachineCoding/Javasc
 import CodingWorkspace from './components/JavascriptMachineCoding/CodingWorkspace';
 import OutputBased from './components/OutputBased/OutputBased';
 import NotFound from './components/NotFound/NotFound';
+import AboutDeveloper from './utils/AboutDeveloper/AboutDeveloper';
 
 function App() {
     return (
@@ -104,6 +105,15 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <CodingWorkspace />
+                                </ProtectedRoute>
+                            } 
+                        />
+
+                        <Route 
+                            path="/dashboard/about-developer" 
+                            element={
+                                <ProtectedRoute>
+                                    <AboutDeveloper />
                                 </ProtectedRoute>
                             } 
                         />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HiMenuAlt3, HiX, HiUser, HiLogout, HiMoon, HiSun } from 'react-icons/hi';
+import { HiMenuAlt3, HiX, HiUser, HiLogout, HiMoon, HiSun, HiCode } from 'react-icons/hi';
 import { MdLogout, MdClose } from 'react-icons/md';
 import { useTheme } from '../WhiteDarkMode/useTheme';
 import ThemeToggle from '../WhiteDarkMode/ThemeToggle';
@@ -197,6 +197,36 @@ const Hamburger = ({ user, getInitials, onLoginClick }) => {
 							</button>
 						)
 					)}
+
+					{/* Nav Links */}
+					<nav className="flex flex-col gap-1.5">
+						<button
+							type="button"
+							onClick={() => {
+								navigate('/dashboard/about-developer');
+								setIsOpen(false);
+							}}
+							className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-[1.02]"
+							style={{
+								background: isDark ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.05)',
+								border: isDark ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(59, 130, 246, 0.15)',
+								color: isDark ? '#E5E7EB' : '#374151',
+							}}
+						>
+							<span
+								className="flex items-center justify-center w-7 h-7 rounded-lg transition-all duration-300 group-hover:scale-110"
+								style={{
+									background: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.1)',
+								}}
+							>
+								<HiCode className="w-4 h-4" style={{ color: isDark ? colors.blueLight : colors.blueMid }} />
+							</span>
+							<span className="flex-1 text-left">About Developer</span>
+							<svg className="w-3.5 h-3.5 opacity-40 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+								<path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+							</svg>
+						</button>
+					</nav>
 
 					{/* Theme Toggle Section */}
 					<div 
