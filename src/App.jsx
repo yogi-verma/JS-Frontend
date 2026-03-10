@@ -112,9 +112,9 @@ function App() {
                         <Route 
                             path="/dashboard/about-developer" 
                             element={
-                                <ProtectedRoute>
+                                // <ProtectedRoute>
                                     <AboutDeveloper />
-                                </ProtectedRoute>
+                                // </ProtectedRoute>
                             } 
                         />
                         <Route path="*" element={<NotFound />} />

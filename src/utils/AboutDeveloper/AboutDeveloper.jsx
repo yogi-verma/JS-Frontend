@@ -205,25 +205,27 @@ export default function AboutDeveloper() {
             </svg>
           </div>
 
-          <h2 className="adev-name">
-            {DEV.name.split('').map((ch, i) => (
-              <span key={i} className="adev-name-ch" style={{ animationDelay: `${0.6 + i * 0.04}s` }}>
-                {ch === ' ' ? '\u00A0' : ch}
-              </span>
-            ))}
-          </h2>
+          <div className="adev-card-info">
+            <h2 className="adev-name">
+              {DEV.name.split('').map((ch, i) => (
+                <span key={i} className="adev-name-ch" style={{ animationDelay: `${0.6 + i * 0.04}s` }}>
+                  {ch === ' ' ? '\u00A0' : ch}
+                </span>
+              ))}
+            </h2>
 
-          <div className="adev-role-tag">
-            <span className="adev-role-bracket">{'</'}</span>
-            <span className="adev-role-text">{DEV.role}</span>
-            <span className="adev-role-bracket">{'>'}</span>
-          </div>
+            <div className="adev-role-tag">
+              <span className="adev-role-bracket">{'</'}</span>
+              <span className="adev-role-text">{DEV.role}</span>
+              <span className="adev-role-bracket">{'>'}</span>
+            </div>
 
-          <div className="adev-status-pill">
-            <span className="adev-pulse-dot" />
-            <span className="adev-status-text">ONLINE</span>
-            <span className="adev-status-sep">·</span>
-            <span className="adev-status-co">S&amp;P Global</span>
+            <div className="adev-status-pill">
+              <span className="adev-pulse-dot" />
+              <span className="adev-status-text">ONLINE</span>
+              <span className="adev-status-sep">·</span>
+              <span className="adev-status-co">S&amp;P Global</span>
+            </div>
           </div>
 
           <div className="adev-divider" />
